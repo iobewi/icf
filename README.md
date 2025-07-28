@@ -33,3 +33,6 @@ Les tests unitaires peuvent être exécutés avec `pytest` :
 ```bash
 pytest tests
 ```
+
+Si la dépendance [`cryptography`] n'est pas disponible, les tests utilisent
+automatiquement le stub situé dans `tests/cryptography_stub`.

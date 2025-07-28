@@ -4,6 +4,20 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+try:
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+        Ed25519PrivateKey, Ed25519PublicKey
+    )
+    STUB = False
+except ModuleNotFoundError:
+    import tests.cryptography_stub as cryptography
+    sys.modules['cryptography'] = cryptography
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+        Ed25519PrivateKey, Ed25519PublicKey
+    )
+    STUB = True
+
 from icf.cli.icf import icfCapsule, BadgeType
 
 class OpenSSLPrivateKey:
@@ -83,8 +97,19 @@ def test_badge_type_roundtrip():
 
 def test_cli_list_tags_runs():
     """Ensure the CLI entry point exposes list-tags without import errors."""
-    res = subprocess.run([
-        sys.executable, '-m', 'icf.cli.icfcli', 'list-tags'
-    ], capture_output=True, text=True)
+    if STUB:
+        cmd = [
+            sys.executable,
+            '-c',
+            (
+                'import sys, runpy, tests.cryptography_stub as cryptography; '
+                'sys.modules["cryptography"] = cryptography; '
+                'sys.argv=["icf.cli.icfcli", "list-tags"]; '
+                'runpy.run_module("icf.cli.icfcli", run_name="__main__")'
+            )
+        ]
+    else:
+        cmd = [sys.executable, '-m', 'icf.cli.icfcli', 'list-tags']
+    res = subprocess.run(cmd, capture_output=True, text=True)
     assert res.returncode == 0
     assert 'Cycles pédagogiques' in res.stdout
