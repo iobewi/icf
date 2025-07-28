@@ -1,0 +1,12 @@
+[project]
+name = "icf"
+version = "0.1.0"
+description = "IOBEWI Capsule Format library and CLI"
+authors = [{ name = "Balabewi" }]
+requires-python = ">=3.8"
+dependencies = [
+    "cryptography"
+]
+
+[project.scripts]
+icf = "icf.cli.icfcli:main"
