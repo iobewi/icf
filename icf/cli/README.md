@@ -91,7 +91,7 @@ Voir le document `SPEC-ICF.md` pour la spécification complète.
 ## 🔐 Dépendances
 
 - Python 3.8+
-- `cryptography` (`pip install cryptography`)
+- Installer les dépendances avec `pip install -r requirements.txt`
 
 ---
 
