@@ -12,11 +12,12 @@ pour encoder de manière compacte et sécurisée des métadonnées sur des puces
 
 ## 🔧 Installation rapide
 
-Ce projet requiert Python 3.8 ou plus ainsi que la bibliothèque
-[`cryptography`]. Vous pouvez installer celle‑ci via `pip`:
+Ce projet requiert Python 3.8 ou plus. Les dépendances nécessaires sont
+répertoriées dans le fichier `requirements.txt`. Vous pouvez toutes les
+installer en lançant :
 
 ```bash
-pip install cryptography
+pip install -r requirements.txt
 ```
 
 ## 📄 Licence
