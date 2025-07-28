@@ -12,13 +12,14 @@ pour encoder de manière compacte et sécurisée des métadonnées sur des puces
 
 ## 🔧 Installation rapide
 
-Ce projet requiert Python 3.8 ou plus. Les dépendances nécessaires sont
-répertoriées dans le fichier `requirements.txt`. Vous pouvez toutes les
-installer en lançant :
+
+Ce projet requiert Python 3.8 ou plus. Il peut être installé
+directement depuis les sources grâce au fichier `pyproject.toml` :
 
 ```bash
-pip install -r requirements.txt
+pip install .
 ```
+Cela installera automatiquement la dépendance [`cryptography`].
 
 ## 📄 Licence
 
