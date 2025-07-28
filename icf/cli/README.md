@@ -20,8 +20,8 @@ Cette bibliothèque et son interface en ligne de commande permettent de manipule
 
 | Commande        | Description                                               |
 |-----------------|-----------------------------------------------------------|
-| `write`         | Génère une capsule signée à partir d’arguments CLI       |
-| `read`          | Décode et vérifie une capsule `.icf`                      |
+| `encode`        | Génère un binaire `.icf` signé à partir d’arguments CLI   |
+| `decode`        | Décode et vérifie une capsule `.icf`                      |
 | `list-tags`     | Affiche les cycles et matières pédagogiques disponibles   |
 | `export-json`   | Convertit une capsule `.icf` en `.json`                   |
 | `import-json`   | Recharge un `.json`, le signe et produit une `.icf`       |
@@ -33,7 +33,7 @@ Cette bibliothèque et son interface en ligne de commande permettent de manipule
 ### Générer une capsule :
 
 ```bash
-python3 icfcli.py write \
+python3 icfcli.py encode \
   --url https://balabewi.org/audio.mp3 \
   --title "Histoire du soir" \
   --language fr \
@@ -48,7 +48,7 @@ python3 icfcli.py write \
 ### Lire et vérifier une capsule :
 
 ```bash
-python3 icfcli.py read --input sortie.icf --public-key pub.pem
+python3 icfcli.py decode --input sortie.icf --public-key pub.pem
 ```
 
 ### Exporter en JSON :
