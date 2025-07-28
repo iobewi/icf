@@ -1,2 +1,2 @@
-- 📘 [Documentation utilisateur CLI](cli/README.md)
+- 📘 [Documentation utilisateur CLI](icf/cli/README.md)
 - 📑 [Spécification du format ICF](SPEC-ICF.md)
