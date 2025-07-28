@@ -3,6 +3,7 @@ name = "icf"
 version = "0.1.0"
 description = "IOBEWI Capsule Format library and CLI"
 authors = [{ name = "IOBEWI" }]
+license = { text = "MPL-2.0" }
 requires-python = ">=3.8"
 dependencies = [
     "cryptography"
@@ -10,3 +11,7 @@ dependencies = [
 
 [project.scripts]
 icf = "icf.cli.icfcli:main"
+
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta"
