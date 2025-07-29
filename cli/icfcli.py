@@ -14,7 +14,10 @@ import json
 import sys
 from pathlib import Path
 from cli.icf import icfCapsule, Cycle, Matiere, BadgeType
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
+from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+    Ed25519PrivateKey,
+    Ed25519PublicKey,
+)
 from cryptography.hazmat.primitives import serialization
 
 
@@ -52,13 +55,59 @@ def load_public_key(path: str) -> Ed25519PublicKey:
         return serialization.load_pem_public_key(f.read())
 
 
+def validate_badge_fields(args) -> None:
+    """Validate required and unused fields according to the badge type."""
+    btype = args.badge_type if args.badge_type is not None else BadgeType.RESSOURCE
+
+    if btype == BadgeType.RESSOURCE:
+        if not args.url:
+            sys.exit("Erreur : une capsule de ressource nécessite --url.")
+
+    elif btype == BadgeType.CONFIGURATION:
+        if not args.payload:
+            sys.exit("Erreur : une capsule de configuration nécessite --payload.")
+        warnings = []
+        if args.url:
+            warnings.append("--url")
+        if args.tag:
+            warnings.append("--tag")
+        if args.expires is not None:
+            warnings.append("--expires")
+        if args.title:
+            warnings.append("--title")
+        if args.retention is not None:
+            warnings.append("--retention")
+        for w in warnings:
+            print(f"⚠️ Avertissement : {w} n\u2019est pas utilisé pour un badge de configuration.")
+
+    elif btype == BadgeType.ADMINISTRATION:
+        if not args.payload:
+            sys.exit("Erreur : une capsule d’administration nécessite un --payload chiffré.")
+        warnings = []
+        if args.url:
+            warnings.append("--url")
+        if args.tag:
+            warnings.append("--tag")
+        if args.retention is not None:
+            warnings.append("--retention")
+        if args.language:
+            warnings.append("--language")
+        if args.title:
+            warnings.append("--title")
+        for w in warnings:
+            print(f"⚠️ Avertissement : {w} n\u2019est pas utilisé pour un badge d’administration.")
+
+
 def encode_icf(args):
     """
     Encode un binaire ICF à partir des paramètres CLI et la signe avec une clé privée.
     Le résultat est écrit sous forme binaire TLV dans un fichier `.icf`.
     """
+    validate_badge_fields(args)
+
     cap = icfCapsule()
-    cap.set_url(args.url)
+    if args.url:
+        cap.set_url(args.url)
     if args.language:
         cap.set_language(args.language)
     if args.title:
@@ -168,7 +217,7 @@ def main():
 
     # Commande encode
     encode = sub.add_parser('encode', help='Encode and sign a capsule')
-    encode.add_argument('--url', required=True)
+    encode.add_argument('--url')
     encode.add_argument('--language')
     encode.add_argument('--title')
     encode.add_argument('--badge-type', type=parse_badge_type,
