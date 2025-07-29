@@ -1,11 +1,8 @@
 # Spécification du IOBEWI Capsule Format (ICF v1)
 
----
-
 Le format ICF (IOBEWI Capsule Format) est un format TLV conçu par IOBEWI, dans le cadre du projet open source Balabewi, pour encoder de manière sécurisée des métadonnées et des liens vers des ressources numériques sur des puces RFID.
 
 ---
-
 
 ## Objectif
 
@@ -51,8 +48,6 @@ Les TLV sont chaînés les uns à la suite, l'ordre est libre, **sauf pour la si
 | `0xF4`     | AuthorityID | 8 o        | Identifiant de l'autorité ayant signé le contenu                |
 | `0xFF`     | Fin         | 0 o        | (optionnel) marqueur de fin de capsule                          |
 
-> Le champ `AuthorityID` est essentiel si plusieurs autorités de confiance peuvent exister. Il permet au lecteur de savoir **quelle clé publique utiliser** pour vérifier la signature. Sans lui, le lecteur devrait essayer toutes les clés, ce qui est inefficace et peu fiable.
-
 ---
 
 ## Convention de codage
@@ -83,9 +78,9 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Type de données** : ISO 639-1
 * **Contenu** : Code à deux lettres représentant la langue principale du contenu numerique
 * **Obligatoire** : Non, mais recommandé
-* **Utilité** : 
- * Filtrage de contenu par langue dans une interface multilingue
- * Limitation géographique ou pédagogique selon la langue cible
+
+> Filtrage de contenu par langue dans une interface multilingue
+> Limitation géographique ou pédagogique selon la langue cible
 
 ### `0x03` – Titre
 
@@ -93,7 +88,8 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Type de données** : UTF-8
 * **Contenu** : Titre lisible du média (ex. : *Histoires de pirates*)
 * **Obligatoire** : Non, mais recommandé
-* **Utilité** : Affichage dans une interface de supervision ou app mobile, classement, export
+
+> Affichage dans une interface de supervision ou app mobile, classement, export
 
 ### `0x04` – Tag pédagogique
 
@@ -104,7 +100,8 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
   * Octet 2 → **Matière ou thème**
   * Octet 3 → **Sous-classe libre**
 * **Obligatoire** : Non, mais recommandé
-* **Utilité** : Filtrage, gouvernance pédagogique, intégration dans un ENT ou interface métier
+
+> Filtrage, gouvernance pédagogique, intégration dans un ENT ou interface métier
 
 #### Tableau des cycles (octet 1)
 
@@ -134,14 +131,14 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 | `0xFF`       | Réservé usage futur      |
 
 #### Sous-classe libre (octet 3)
-
+²
 * Utilisation libre par l’émetteur de la capsule (enseignant, app mobile…)
 * Peut désigner :
- * un niveau précis (ex. : CE1 → 0x11)
- * un groupe classe (ex. : ULIS → 0x3A)
- * une série pédagogique (ex. : série "Écoute active" → 0x80)
+  * un niveau précis (ex. : CE1 → 0x11)
+  * un groupe classe (ex. : ULIS → 0x3A)
+  * une série pédagogique (ex. : série "Écoute active" → 0x80)
 * Valeurs non normalisées à ce jour
- * Si non utilisé : `0x00`
+  * Si non utilisé : `0x00`
 
 ### `0x05` – Durée de rétention
 
@@ -245,7 +242,9 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 * **Contenu** : Permet au lecteur de savoir quelle clé publique utiliser pour vérifier la signature
 * **Exemple** : `01 23 45 67 89 AB CD EF`
 
-> Chaque autorité locale (ex. : école, structure, éditeur) peut avoir sa propre paire de clés.
+> Le champ `AuthorityID` est essentiel si plusieurs autorités de confiance doivent coexister sur un même appareil.
+> Il permet au lecteur de savoir **quelle clé publique utiliser** pour vérifier la signature.
+> Chaque autorité locale (par exemple : école, structure, éditeur) peut disposer de sa propre paire de clés.
 
 ### `0xFF` – Marqueur de fin
 
