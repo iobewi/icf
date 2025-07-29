@@ -44,8 +44,8 @@ Les TLV sont chaînés les uns à la suite, l'ordre est libre, **sauf pour la si
 | `0x04`     | Tag pédagogique | 3 o        | Octet 1 : cycle, Octet 2 : matière, Octet 3 : sous-classe libre |
 | `0x05`     | Rétention   | 1 o        | Durée de conservation du média local (en jours, 0 = non stocké) |
 | `0x06`     | Expiration  | 4 o        | Timestamp d’expiration absolue (UNIX time, big-endian)          |
-| `0xE0`     | Type badge  | 1 o        | 0=ressource, 1=configuration, 2=administration                 |
-| `0xE1–0xEF`| Payload sys.| variable   | Données de config ou commandes admin                          |
+| `0xE0`     | Type badge  | 1 o        | 0=ressource, 1=configuration, 2=administration                  |
+| `0xE1–0xEF`| Payload sys.| variable   | Données de config ou commandes admin (encodées en JSON)         |
 | `0xF2`     | Hash        | 32 o       | SHA256 calculé sur tous les TLV précédents                      |
 | `0xF3`     | Signature   | 64 o       | Signature du hash par une autorité locale (Ed25519)             |
 | `0xF4`     | AuthorityID | 8 o        | Identifiant de l'autorité ayant signé le contenu                |
@@ -181,36 +181,73 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 
 ---
 
-### `0xE0` – 🎫 Type de badge
+### 🎫 `0xE0` – Type de badge
 
 * **Taille** : 1 octet
-* **Valeurs** :
-  * `0x00` → Badge ressource (lecture audio)
-  * `0x01` → Badge configuration (paramètres simples)
-  * `0x02` → Badge administration (données sensibles chiffrées)
-* **Obligatoire** : Non — s'il est absent, le badge est considéré comme une ressource.
+* **Valeurs possibles** :
 
-### `0xE1–0xEF` – 📦 Données système
+  * `0x00` → Badge ressource *(lecture de contenu numérique)*
+  * `0x01` → Badge configuration *(paramètres simples non critiques)*
+  * `0x02` → Badge administration *(opérations critiques ou sensibles)*
+* **Obligatoire** : Non — en son absence, le badge est interprété comme une ressource (`0x00` par défaut)
+
+| Type           | Valeur | Signature requise                   | Chiffrement requis | Persistant | Interprétation                               |
+| -------------- | ------ | ----------------------------------- | ------------------ | ---------- | -------------------------------------------- |
+| Ressource      | 0x00   | Optionnelle (requise si mode bridé) | Non                | Non        | Contenu à lire (audio, vidéo, doc...)        |
+| Configuration  | 0x01   | Non                                 | Non                | Non        | Paramétrage simple d’un appareil             |
+| Administration | 0x02   | Oui                                 | Oui (ECIES)        | Oui        | Configuration critique / commandes sensibles |
+
+> Les badges de configuration sont interprétés au moment de la lecture et n'ont pas besoin d’être persistés.
+> Les badges d’administration peuvent modifier de façon persistante la configuration du lecteur (ex: clés Wi-Fi, endpoints, règles de sécurité…).
+
+---
+
+### 📦 `0xE1` – Données système (Payloads structurés)
 
 * **Taille** : variable
-* **Contenu** : Charges utiles de configuration ou commandes d'administration.
-* **Persistance** : Certaines données peuvent être stockées en NVS si nécessaire.
+* **Contenu** : Charge utile structurée (ex. paramètres de configuration ou commandes internes)
+* **Persistance** : dépend du type de badge (voir tableau ci-dessus)
+* **Encodage recommandé** : la `Value` contient **exclusivement une structure JSON valide**. Toute autre forme d'encodage (binaire, CBOR, texte libre) est interdite.
+
+---
+
+### 📘 Badge de ressource avec configuration (`badge_type: 0x00` + `0xE1`)
+
+Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de type ressource peut inclure un champ `0xE1` contenant des **paramètres de lecture temporaires**, au format **JSON clair**.
+
+* Ce champ est optionnel.
+* Les paramètres sont **appliqués uniquement pendant la lecture** et ne modifient **pas la configuration durable** de l'appareil.
+* Les lecteurs peuvent choisir d’ignorer ces options si la politique locale de sécurité l’exige.
+
+---
+
+#### 🌐 Badge de configuration (`badge_type: 0x01`)
+
+* Le champ `0xE1` contient des données **en clair**, directement interprétables par le lecteur.
+* Ces données encodent des paramètres simples : volume, mise en veille, ambiance lumineuse, etc.
+* La structure exacte doit être connue du firmware pour que la configuration soit appliquée correctement.
+
+> Un seul TLV `0xE1` est attendu par badge. Si plusieurs sont présents, seul le premier peut être pris en compte.
+
+---
+
+#### 🔐 Badge d’administration (`badge_type: 0x02`)
+
+* Le champ `0xE1` d’un badge de type `0x02` est destiné à contenir une donnée chiffrée.
+* Le format, l’algorithme, la clé publique, et les mécanismes de vérification **ne relèvent pas du format ICF**, mais du logiciel embarqué du lecteur.
+* L’ICF n’impose ni mode cryptographique, ni encodage particulier, mais garantit que le champ est bien identifié et réservé à cet usage.
 
 ---
 
 ### `0xF2` – 🔐 Hash SHA256
 
 * **Taille** : 32 octets
-* **Contenu** : Résultat du calcul SHA256 sur tous les TLV précédents
-* **Format** : binaire brut
-* **Utilité** : Garantit l’intégrité des données en cas de signature
+* **Algorithme** : SHA256
+* **Contenu** : Empreinte cryptographique calculée sur la séquence TLV précédente (du premier champ jusqu'au dernier champ avant `0xF2`, **exclu**)
+* **Utilité** : Garantit l'intégrité de la capsule et permet de vérifier l'authenticité via la signature Ed25519 (champ `0xF3`)
 
-> Le hash SHA256 est calculé sur la **concaténation binaire des TLV précédents**, dans l’ordre :>
-> ```
-> [Type₁][Length₁][Value₁][Type₂][Length₂][Value₂]... → SHA256
-> ```>
-> Ne **jamais inclure les TLV `0xF2`, `0xF3`, `0xF4`** dans ce calcul.>
-> Recommandation : valider le buffer brut par des outils de test fournis (voir section CLI plus bas).
+> Ce champ est obligatoire dès qu'une signature est présente. Il constitue le message clair à signer, et est donc prérequis pour l'authentification du contenu par une autorité.
+> Le hash est calculé sur le buffer binaire concaténé des TLV précédents (hors 0xF2, 0xF3, 0xF4, 0xFF), dans l'ordre d’apparition.
 
 ---
 
@@ -296,19 +333,70 @@ Dans ce second cas :
 
 ## 🔧 Espace utilisé sur NTAG215 (504 octets max)
 
-| Champ          | Taille typique |
-| -------------- | ---------------|
-| URL            | ~120 à 200 o   |
-| Langue         | 2 o            |
-| Titre          | ~32 à 64 o     |
-| Tag pédagogique| 3 o            |
-| Rétention      | 1 o            |
-| Expiration     | 4 o            |
-| Hash (SHA256)  | 32 o           |
-| Signature      | 64 o           |
-| Authority ID   | 8 o            |
-| Marqueur de fin| 0 à 2 o        |
-| **Total**      | ~330 à 430 o   |
+---
+
+### 🔧  Capsule de ressource (`badge_type: 0x00`)
+
+| Champ              | Taille typique     |
+| ------------------ | ------------------ |
+| `0x01` URL         | \~120 à 200 octets |
+| `0x02` Langue      | 2 octets           |
+| `0x03` Titre       | \~32 à 64 octets   |
+| `0x04` Tag péd.    | 3 octets           |
+| `0x05` Rétention   | 1 octet            |
+| `0x06` Expiration  | 4 octets           |
+| `0xF2` Hash        | 32 octets          |
+| `0xF3` Signature   | 64 octets          |
+| `0xF4` AuthorityID | 8 octets           |
+| `0xFF` Fin         | 0 à 2 octets       |
+| **Total**          | **\~330 à 430 o**  |
+
+---
+
+### 🔧 Badge de configuration (`badge_type: 0x01`)
+
+| Champ               | Taille typique   |
+| ------------------- | ---------------- |
+| `0xE0` Type         | 1 octet          |
+| `0xE1` Payload JSON | \~30 à 150 o     |
+| `0xFF` Fin          | 0 à 2 octets     |
+| **Total**           | **\~40 à 160 o** |
+
+> ⚠️ Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
+
+---
+
+### 🔧  Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
+
+| Champ                        | Taille typique         |
+| ---------------------------- | ---------------------- |
+| URL (`0x01`)                 | \~120 à 200 octets     |
+| Langue (`0x02`)              | 2 octets               |
+| Titre (`0x03`)               | \~32 à 64 octets       |
+| Tag pédagogique (`0x04`)     | 3 octets               |
+| Rétention (`0x05`)           | 1 octet                |
+| Expiration (`0x06`)          | 4 octets               |
+| Payload config JSON (`0xE1`) | \~50 à 100 o           |
+| Hash (`0xF2`)                | 32 octets              |
+| Signature (`0xF3`)           | 64 octets              |
+| Authority ID (`0xF4`)        | 8 octets               |
+| Fin (`0xFF`)                 | 0 à 2 octets           |
+| **Total**                    | **\~370 à 480 octets** |
+
+> ⚠️ Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
+---
+
+### 🔧 Badge d’administration (`badge_type: 0x02`)
+
+| Champ                  | Taille typique    |
+| ---------------------- | ----------------- |
+| `0xE0` Type            | 1 octet           |
+| `0xE1` Payload chiffré | \~64 à 128 o      |
+| `0xF2` Hash            | 32 octets         |
+| `0xF3` Signature       | 64 octets         |
+| `0xF4` AuthorityID     | 8 octets          |
+| `0xFF` Fin             | 0 à 2 octets      |
+| **Total**              | **\~170 à 240 o** |
 
 ---
 
@@ -321,7 +409,9 @@ Dans ce second cas :
 * Vérification par clé publique
 * Export/import en JSON
 
-### Exemple JSON minimal :
+### 🧩 Exemple JSON d’un badge de ressource (`badge_type: 0x00`)
+
+#### Exemple JSON minimal :
 
 ```json
 {
@@ -340,7 +430,7 @@ Dans ce second cas :
 
 ```
 
-### Exemple JSON complet :
+#### Exemple JSON complet :
 
 ```json
 {
@@ -359,6 +449,67 @@ Dans ce second cas :
   "authority_id": [1, 35, 69, 103, 137, 171, 205, 239]
 }
 ```
+
+#### Exemple JSON configuration :
+
+```json
+{
+  "badge_type": 0,
+  "url": "https://balabewi.org/audio123.mp3",
+  "language": "fr",
+  "title": "Histoires de pirates",
+  "tag": {
+    "cycle": 1,
+    "subject": 1,
+    "sub": 0
+  },
+  "retention": 7,
+  "expires": 1767225599,
+  "authority_id": "0x0123456789ABCDEF",
+  "system_payload": {
+    "volume": 50,
+    "ambience": "bright",
+    "lock_buttons": true
+  }
+}
+````
+
+---
+
+### 🧩 Exemple JSON d’un badge de configuration (`badge_type: 0x01`)
+
+Ce type de badge permet de configurer des paramètres simples du lecteur, sans chiffrement ni signature obligatoire.
+
+```json
+{
+  "badge_type": 1,
+  "system_payload": {
+    "volume": 70,
+    "sleep_timeout": 120,
+    "ambience": "calm"
+  }
+}
+
+```
+
+---
+
+### 🧩 Exemple JSON d’un badge d’administration (`badge_type: 0x02`)
+
+> ⚠️ Pour respecter la spécification, le contenu d’un badge d’administration (`badge_type: 2`) ne doit **jamais** exposer des données en clair dans le champ `system_payload`.
+> Le champ `system_payload` dans l’exemple JSON est une chaîne binaire chiffrée (souvent encodée en Base64 dans les outils). Elle ne peut être interprétée qu’après déchiffrement par un lecteur équipé de la bonne clé.
+
+````json
+{
+  "badge_type": 2,
+  "system_payload": "BASE64(ECIES(payload JSON))",
+  "signature": "<signature_ed25519>",
+  "authority_id": [1, 35, 69, 103, 137, 171, 205, 239]
+}
+`````
+
+> Le contenu JSON original est d’abord sérialisé, puis chiffré via ECIES, puis encodé en base64.
+
 ---
 
 ### 🔍 Détails :
