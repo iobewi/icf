@@ -78,6 +78,13 @@ def encode_icf(args):
             sys.exit(1)
     if args.expires:
         cap.set_expiration(args.expires)
+    if args.payload:
+        p = Path(args.payload)
+        if p.exists():
+            payload_data = p.read_bytes()
+        else:
+            payload_data = args.payload.encode('utf-8')
+        cap.set_system_payload(payload_data)
 
     private_key = load_private_key(args.private_key)
     authority_id = bytes.fromhex(args.authority_id)
@@ -169,6 +176,7 @@ def main():
     encode.add_argument('--retention', type=int)
     encode.add_argument('--tag', help='cycle,subject,sub (ex: 2,6,66)')
     encode.add_argument('--expires', type=int, help='UNIX timestamp')
+    encode.add_argument('--payload', help='JSON string or path for system payload')
     encode.add_argument('--private-key', required=True)
     encode.add_argument('--authority-id', required=True, help='8-byte hex (ex: 0123456789ABCDEF)')
     encode.add_argument('--output', required=True, help='Output capsule file')

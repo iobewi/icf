@@ -95,6 +95,24 @@ def test_badge_type_roundtrip():
     assert decoded.verify(pub)
 
 
+def test_system_payload_roundtrip():
+    priv = OpenSSLPrivateKey()
+    pub = priv.public_key()
+
+    cap = icfCapsule()
+    cap.set_badge_type(BadgeType.CONFIGURATION)
+    cap.set_system_payload(b'{"volume":42}')
+    cap.finalize(priv, b'ABCDEFGH')
+
+    encoded = cap.encode_full()
+    decoded = icfCapsule.decode(encoded)
+
+    assert decoded.get_system_payload() == b'{"volume":42}'
+    d = decoded.to_dict()
+    assert d['system_payload'] == {"volume": 42}
+    assert decoded.verify(pub)
+
+
 def test_cli_list_tags_runs():
     """Ensure the CLI entry point exposes list-tags without import errors."""
     if STUB:

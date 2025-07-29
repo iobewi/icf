@@ -10,7 +10,8 @@ Utilisé dans le cadre du projet Balabewi.
 import hashlib
 import struct
 from enum import IntEnum
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Union
+import json
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
 from cryptography.hazmat.primitives import serialization
 
@@ -20,11 +21,10 @@ TLV_TYPES = {
     'language': 0x02,
     'title': 0x03,
     'badge_type': 0xE0,
-    'config': 0xE1,
-    'admin': 0xE2,
+    'system_payload': 0xE1,
+    'tag': 0x04,
     'retention': 0x05,
-    'tag': 0x06,
-    'expires': 0x07,
+    'expires': 0x06,
     'hash': 0xF2,
     'signature': 0xF3,
     'authority_id': 0xF4,
@@ -184,21 +184,13 @@ class icfCapsule:
         """
         self.fields[TLV_TYPES['tag']] = struct.pack('BBB', int(cycle), int(subject), sub)
 
-    def set_config_payload(self, data: bytes):
-        """Ajoute une charge utile de configuration."""
-        self.fields[TLV_TYPES['config']] = data
+    def set_system_payload(self, data: bytes):
+        """Ajoute une charge utile système (configuration ou administration)."""
+        self.fields[TLV_TYPES['system_payload']] = data
 
-    def get_config_payload(self) -> Optional[bytes]:
-        """Retourne la charge utile de configuration si présente."""
-        return self.fields.get(TLV_TYPES['config'])
-
-    def set_admin_payload(self, data: bytes):
-        """Ajoute une charge utile d'administration (chiffrée si nécessaire)."""
-        self.fields[TLV_TYPES['admin']] = data
-
-    def get_admin_payload(self) -> Optional[bytes]:
-        """Retourne la charge utile d'administration si présente."""
-        return self.fields.get(TLV_TYPES['admin'])
+    def get_system_payload(self) -> Optional[bytes]:
+        """Retourne la charge utile système si présente."""
+        return self.fields.get(TLV_TYPES['system_payload'])
 
     def set_expiration(self, timestamp: int):
         """
@@ -321,10 +313,11 @@ class icfCapsule:
                 d['title'] = v.decode('utf-8')
             elif t == TLV_TYPES['badge_type']:
                 d['badge_type'] = v[0]
-            elif t == TLV_TYPES['config']:
-                d['config'] = v.hex()
-            elif t == TLV_TYPES['admin']:
-                d['admin'] = v.hex()
+            elif t == TLV_TYPES['system_payload']:
+                try:
+                    d['system_payload'] = json.loads(v.decode('utf-8'))
+                except Exception:
+                    d['system_payload'] = v.decode('utf-8', errors='replace')
             elif t == TLV_TYPES['retention']:
                 d['retention'] = v[0]
             elif t == TLV_TYPES['tag']:
@@ -351,10 +344,17 @@ class icfCapsule:
             cap.set_title(data['title'])
         if 'badge_type' in data:
             cap.set_badge_type(BadgeType(data['badge_type']))
-        if 'config' in data:
-            cap.set_config_payload(bytes.fromhex(data['config']))
-        if 'admin' in data:
-            cap.set_admin_payload(bytes.fromhex(data['admin']))
+        if 'system_payload' in data:
+            payload = data['system_payload']
+            if isinstance(payload, (dict, list)):
+                cap.set_system_payload(json.dumps(payload, separators=(',', ':')).encode('utf-8'))
+            elif isinstance(payload, str):
+                try:
+                    cap.set_system_payload(bytes.fromhex(payload))
+                except ValueError:
+                    cap.set_system_payload(payload.encode('utf-8'))
+            else:
+                cap.set_system_payload(bytes(payload))
         if 'retention' in data:
             cap.set_retention(data['retention'])
         if 'tag' in data:
