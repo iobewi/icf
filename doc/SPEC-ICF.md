@@ -307,7 +307,6 @@ Dans ce second cas :
   "expires": 1767225599,
   "authority_id": "0x0123456789ABCDEF"
 }
-
 ```
 
 #### Complet :
@@ -352,7 +351,7 @@ Dans ce second cas :
     "lock_buttons": true
   }
 }
-````
+```
 
 ### Badge de configuration (`badge_type: 0x01`)
 
@@ -367,23 +366,22 @@ Ce type de badge permet de configurer des paramètres simples du lecteur, sans c
     "ambience": "calm"
   }
 }
-
 ```
 
 ### Badge d’administration (`badge_type: 0x02`)
 
-> Pour respecter la spécification, le contenu d’un badge d’administration (`badge_type: 2`) ne doit **jamais** exposer des données en clair dans le champ `system_payload`.
-> Le contenu JSON original est d’abord sérialisé, puis chiffré via ECIES, puis encodé en base64.
-> Le champ `system_payload` dans l’exemple JSON est une chaîne binaire chiffrée (souvent encodée en Base64 dans les outils). Elle ne peut être interprétée qu’après déchiffrement par un lecteur équipé de la bonne clé.
+Pour respecter la spécification, le contenu d’un badge d’administration (`badge_type: 2`) ne doit **jamais** exposer des données en clair dans le champ `system_payload`.
+Le contenu JSON original est d’abord sérialisé, puis chiffré via ECIES, puis encodé en base64.
+Le champ `system_payload` dans l’exemple JSON est une chaîne binaire chiffrée (souvent encodée en Base64 dans les outils). Elle ne peut être interprétée qu’après déchiffrement par un lecteur équipé de la bonne clé.
 
-````json
+```json
 {
   "badge_type": 2,
   "system_payload": "BASE64(ECIES(payload JSON))",
   "signature": "<signature_ed25519>",
   "authority_id": [1, 35, 69, 103, 137, 171, 205, 239]
 }
-`````
+````
 
 ---
 
