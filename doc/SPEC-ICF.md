@@ -1,4 +1,4 @@
-# ✨ Spécification du IOBEWI Capsule Format (ICF v1)
+# Spécification du IOBEWI Capsule Format (ICF v1)
 
 ---
 
@@ -7,7 +7,7 @@ Le format ICF (IOBEWI Capsule Format) est un format TLV conçu par IOBEWI, dans 
 ---
 
 
-## 🌟 Objectif
+## Objectif
 
 Définir un format TLV, appelé IOBEWI Capsule Format (ICF), pérenne, compact et sécurisé, pour encoder des informations sur une puce RFID (NTAG215, 504 octets utiles), utilisée dans les lecteurs audio Balabewi.
 
@@ -20,7 +20,7 @@ Ce format vise à :
 
 ---
 
-## 📊 Format TLV général
+## Format TLV général
 
 Chaque champ suit la structure TLV :
 
@@ -34,7 +34,7 @@ Les TLV sont chaînés les uns à la suite, l'ordre est libre, **sauf pour la si
 
 ---
 
-## 🔢 Types TLV définis (v1)
+## Types TLV définis (v1)
 
 | Type (hex) | Nom         | Taille max | Description                                                     |
 | ---------- | ----------- | ---------- | --------------------------------------------------------------- |
@@ -55,7 +55,7 @@ Les TLV sont chaînés les uns à la suite, l'ordre est libre, **sauf pour la si
 
 ---
 
-## 🧑‍💻 Convention de codage
+## Convention de codage
 
 * **Endianness** : tous les entiers multi-octets (timestamps, identifiants) sont codés **big-endian**.
 * **Texte** : chaînes UTF-8 **sans BOM**, maximum strict indiqué par `Length`. Aucun encodage alterné autorisé (ex. UTF-16).
@@ -63,13 +63,11 @@ Les TLV sont chaînés les uns à la suite, l'ordre est libre, **sauf pour la si
 
 ---
 
-## 🧩 Détail des champs TLV
+## Détail des champs TLV
 
 Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière précise, avec son rôle, sa structure, et ses cas d’usage.
 
----
-
-### `0x01` – 🌍 URL du contenu
+### `0x01` – URL du contenu
 
 * **Taille maximale** : 200 octets (UTF-8 sans BOM)
 * **Type de données** : chaîne de caractères ASCII ou UTF-8
@@ -79,9 +77,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 
 > Le lien doit être accessible publiquement, sans authentification, et stable dans le temps.
 
----
-
-### `0x02` – 🌐  Langue
+### `0x02` –  Langue
 
 * **Taille maximale** : 2 octets
 * **Type de données** : ISO 639-1
@@ -91,9 +87,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
  * Filtrage de contenu par langue dans une interface multilingue
  * Limitation géographique ou pédagogique selon la langue cible
 
----
-
-### `0x03` – 📝 Titre
+### `0x03` – Titre
 
 * **Taille maximale** : 64 octets
 * **Type de données** : UTF-8
@@ -101,9 +95,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Obligatoire** : Non, mais recommandé
 * **Utilité** : Affichage dans une interface de supervision ou app mobile, classement, export
 
----
-
-### `0x04` – 🎓 Tag pédagogique
+### `0x04` – Tag pédagogique
 
 * **Taille** : 3 octets
 * **Structure** :
@@ -114,7 +106,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Obligatoire** : Non, mais recommandé
 * **Utilité** : Filtrage, gouvernance pédagogique, intégration dans un ENT ou interface métier
 
-#### 📘 Tableau des cycles (octet 1)
+#### Tableau des cycles (octet 1)
 
 | Valeur (hex) | Cycle scolaire           |
 |--------------|--------------------------|
@@ -126,7 +118,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 | `0xFE`       | Réservé usage local      |
 | `0xFF`       | Réservé usage futur      |
 
-#### 📗 Tableau des matières (octet 2)
+#### Tableau des matières (octet 2)
 
 | Valeur (hex) | Matière / thème          |
 |--------------|--------------------------|
@@ -141,7 +133,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 | `0xFE`       | Réservé usage local      |
 | `0xFF`       | Réservé usage futur      |
 
-#### 📙 Sous-classe libre (octet 3)
+#### Sous-classe libre (octet 3)
 
 * Utilisation libre par l’émetteur de la capsule (enseignant, app mobile…)
 * Peut désigner :
@@ -151,9 +143,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * Valeurs non normalisées à ce jour
  * Si non utilisé : `0x00`
 
----
-
-### `0x05` – 🕒 Durée de rétention
+### `0x05` – Durée de rétention
 
 * **Taille** : 1 octet
 * **Type de données** : entier non signé (uint8)
@@ -167,9 +157,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 
 > Permet de contrôler la place mémoire et l’actualisation automatique du contenu.
 
----
-
-### `0x06` – 📆 Expiration absolue
+### `0x06` – Expiration absolue
 
 * **Taille** : 4 octets
 * **Type de données** : Timestamp UNIX (uint32 big-endian)
@@ -179,9 +167,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 
 > Nécessite une horloge interne (RTC) ou une synchronisation réseau (NTP) sur le lecteur.
 
----
-
-### 🎫 `0xE0` – Type de badge
+### `0xE0` – Type de badge
 
 * **Taille** : 1 octet
 * **Valeurs possibles** :
@@ -200,18 +186,15 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 > Les badges de configuration sont interprétés au moment de la lecture et n'ont pas besoin d’être persistés.
 > Les badges d’administration peuvent modifier de façon persistante la configuration du lecteur (ex: clés Wi-Fi, endpoints, règles de sécurité…).
 
----
-
-### 📦 `0xE1` – Données système (Payloads structurés)
+### `0xE1` – Données système (Payloads structurés)
 
 * **Taille** : variable
 * **Contenu** : Charge utile structurée (ex. paramètres de configuration ou commandes internes)
 * **Persistance** : dépend du type de badge (voir tableau ci-dessus)
 * **Encodage recommandé** : la `Value` contient **exclusivement une structure JSON valide**. Toute autre forme d'encodage (binaire, CBOR, texte libre) est interdite.
 
----
 
-### 📘 Badge de ressource avec configuration (`badge_type: 0x00` + `0xE1`)
+#### Badge de ressource avec configuration (`badge_type: 0x00` + `0xE1`)
 
 Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de type ressource peut inclure un champ `0xE1` contenant des **paramètres de lecture temporaires**, au format **JSON clair**.
 
@@ -219,9 +202,8 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 * Les paramètres sont **appliqués uniquement pendant la lecture** et ne modifient **pas la configuration durable** de l'appareil.
 * Les lecteurs peuvent choisir d’ignorer ces options si la politique locale de sécurité l’exige.
 
----
 
-#### 🌐 Badge de configuration (`badge_type: 0x01`)
+#### Badge de configuration (`badge_type: 0x01`)
 
 * Le champ `0xE1` contient des données **en clair**, directement interprétables par le lecteur.
 * Ces données encodent des paramètres simples : volume, mise en veille, ambiance lumineuse, etc.
@@ -229,17 +211,14 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 
 > Un seul TLV `0xE1` est attendu par badge. Si plusieurs sont présents, seul le premier peut être pris en compte.
 
----
 
-#### 🔐 Badge d’administration (`badge_type: 0x02`)
+#### Badge d’administration (`badge_type: 0x02`)
 
 * Le champ `0xE1` d’un badge de type `0x02` est destiné à contenir une donnée chiffrée.
 * Le format, l’algorithme, la clé publique, et les mécanismes de vérification **ne relèvent pas du format ICF**, mais du logiciel embarqué du lecteur.
 * L’ICF n’impose ni mode cryptographique, ni encodage particulier, mais garantit que le champ est bien identifié et réservé à cet usage.
 
----
-
-### `0xF2` – 🔐 Hash SHA256
+### `0xF2` – Hash SHA256
 
 * **Taille** : 32 octets
 * **Algorithme** : SHA256
@@ -249,9 +228,7 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 > Ce champ est obligatoire dès qu'une signature est présente. Il constitue le message clair à signer, et est donc prérequis pour l'authentification du contenu par une autorité.
 > Le hash est calculé sur le buffer binaire concaténé des TLV précédents (hors 0xF2, 0xF3, 0xF4, 0xFF), dans l'ordre d’apparition.
 
----
-
-### `0xF3` – ✍️ Signature cryptographique
+### `0xF3` – Signature cryptographique
 
 * **Taille** : 64 octets
 * **Algorithme** : Ed25519
@@ -261,9 +238,7 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 > Signé à partir du hash SHA256 (champ `0xF2`)
 > Doit être présent **avec** un champ `0xF4` pour être exploitable par un lecteur sécurisé
 
----
-
-### `0xF4` – 🆔 Authority ID
+### `0xF4` – Authority ID
 
 * **Taille** : 8 octets
 * **Type** : identifiant unique d’autorité (uint64 ou chaîne fixe)
@@ -272,9 +247,7 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 
 > Chaque autorité locale (ex. : école, structure, éditeur) peut avoir sa propre paire de clés.
 
----
-
-### `0xFF` – ✅ Marqueur de fin
+### `0xFF` – Marqueur de fin
 
 * **Taille** : 0 octet
 * **Utilité** : Optionnelle — peut marquer explicitement la fin d’une capsule
@@ -282,7 +255,7 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 
 ---
 
-## 🔐 Mécanisme de vérification (lecteur)
+## Mécanisme de vérification (lecteur)
 
 Le lecteur peut être configuré en 2 modes :
 
@@ -299,7 +272,7 @@ Dans ce second cas :
 
 ---
 
-## 👥 Fonctionnement de la signature (Ed25519)
+## Fonctionnement de la signature (Ed25519)
 
 * La signature est réalisée **par l’app mobile**, qui détient une **clé privée locale**.
 
@@ -314,104 +287,11 @@ Dans ce second cas :
 
 ---
 
-## 📄 Exemple de capsule signée
+### Exemple d’un badge en format JSON 
 
-| Type | Len  | Valeur                           | Commentaire               |
-| ---- | ---- | -------------------------------- | ------------------------- |
-| `01` | `1A` | `https://balabewi.org/audio.mp3` | URL du média              |
-| `02` | `02` | `66 72`                          | Langue : `fr` (français)  |
-| `03` | `0F` | `Histoires de pirates`           | Titre                     |
-| `04` | `03` | `0x01 0x01 0x00`                 | Cycle 1 / Lecture / Libre |
-| `05` | `01` | `0x07`                           | Rétention de 7 jours      |
-| `06` | `04` | `0x66 87 3C A0`                  | Expiration                |
-| `F2` | `20` | `...sha256...`                   | Hash                      |
-| `F3` | `40` | `...signature...`                | Signature Ed25519         |
-| `F4` | `08` | `01 23 45 67 89 AB CD EF`        | ID autorité locale        |
-| `FF` | `00` | `–`                              | Marqueur de fin           |
+### Badge de ressource (`badge_type: 0x00`)
 
----
-
-## 🔧 Espace utilisé sur NTAG215 (504 octets max)
-
----
-
-### 🔧  Capsule de ressource (`badge_type: 0x00`)
-
-| Champ              | Taille typique     |
-| ------------------ | ------------------ |
-| `0x01` URL         | \~120 à 200 octets |
-| `0x02` Langue      | 2 octets           |
-| `0x03` Titre       | \~32 à 64 octets   |
-| `0x04` Tag péd.    | 3 octets           |
-| `0x05` Rétention   | 1 octet            |
-| `0x06` Expiration  | 4 octets           |
-| `0xF2` Hash        | 32 octets          |
-| `0xF3` Signature   | 64 octets          |
-| `0xF4` AuthorityID | 8 octets           |
-| `0xFF` Fin         | 0 à 2 octets       |
-| **Total**          | **\~330 à 430 o**  |
-
----
-
-### 🔧 Badge de configuration (`badge_type: 0x01`)
-
-| Champ               | Taille typique   |
-| ------------------- | ---------------- |
-| `0xE0` Type         | 1 octet          |
-| `0xE1` Payload JSON | \~30 à 150 o     |
-| `0xFF` Fin          | 0 à 2 octets     |
-| **Total**           | **\~40 à 160 o** |
-
-> ⚠️ Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
-
----
-
-### 🔧  Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
-
-| Champ                        | Taille typique         |
-| ---------------------------- | ---------------------- |
-| URL (`0x01`)                 | \~120 à 200 octets     |
-| Langue (`0x02`)              | 2 octets               |
-| Titre (`0x03`)               | \~32 à 64 octets       |
-| Tag pédagogique (`0x04`)     | 3 octets               |
-| Rétention (`0x05`)           | 1 octet                |
-| Expiration (`0x06`)          | 4 octets               |
-| Payload config JSON (`0xE1`) | \~50 à 100 o           |
-| Hash (`0xF2`)                | 32 octets              |
-| Signature (`0xF3`)           | 64 octets              |
-| Authority ID (`0xF4`)        | 8 octets               |
-| Fin (`0xFF`)                 | 0 à 2 octets           |
-| **Total**                    | **\~370 à 480 octets** |
-
-> ⚠️ Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
----
-
-### 🔧 Badge d’administration (`badge_type: 0x02`)
-
-| Champ                  | Taille typique    |
-| ---------------------- | ----------------- |
-| `0xE0` Type            | 1 octet           |
-| `0xE1` Payload chiffré | \~64 à 128 o      |
-| `0xF2` Hash            | 32 octets         |
-| `0xF3` Signature       | 64 octets         |
-| `0xF4` AuthorityID     | 8 octets          |
-| `0xFF` Fin             | 0 à 2 octets      |
-| **Total**              | **\~170 à 240 o** |
-
----
-
-## 🧰 Outils recommandés
-
-### ✅ CLI ou lib de référence (à développer)
-
-* Encodage / décodage de capsules
-* Signature via clé locale
-* Vérification par clé publique
-* Export/import en JSON
-
-### 🧩 Exemple JSON d’un badge de ressource (`badge_type: 0x00`)
-
-#### Exemple JSON minimal :
+#### Minimal :
 
 ```json
 {
@@ -430,7 +310,7 @@ Dans ce second cas :
 
 ```
 
-#### Exemple JSON complet :
+#### Complet :
 
 ```json
 {
@@ -450,7 +330,7 @@ Dans ce second cas :
 }
 ```
 
-#### Exemple JSON configuration :
+#### Avec paramètre de configuration :
 
 ```json
 {
@@ -474,9 +354,7 @@ Dans ce second cas :
 }
 ````
 
----
-
-### 🧩 Exemple JSON d’un badge de configuration (`badge_type: 0x01`)
+### Badge de configuration (`badge_type: 0x01`)
 
 Ce type de badge permet de configurer des paramètres simples du lecteur, sans chiffrement ni signature obligatoire.
 
@@ -492,11 +370,10 @@ Ce type de badge permet de configurer des paramètres simples du lecteur, sans c
 
 ```
 
----
+### Badge d’administration (`badge_type: 0x02`)
 
-### 🧩 Exemple JSON d’un badge d’administration (`badge_type: 0x02`)
-
-> ⚠️ Pour respecter la spécification, le contenu d’un badge d’administration (`badge_type: 2`) ne doit **jamais** exposer des données en clair dans le champ `system_payload`.
+> Pour respecter la spécification, le contenu d’un badge d’administration (`badge_type: 2`) ne doit **jamais** exposer des données en clair dans le champ `system_payload`.
+> Le contenu JSON original est d’abord sérialisé, puis chiffré via ECIES, puis encodé en base64.
 > Le champ `system_payload` dans l’exemple JSON est une chaîne binaire chiffrée (souvent encodée en Base64 dans les outils). Elle ne peut être interprétée qu’après déchiffrement par un lecteur équipé de la bonne clé.
 
 ````json
@@ -508,23 +385,82 @@ Ce type de badge permet de configurer des paramètres simples du lecteur, sans c
 }
 `````
 
-> Le contenu JSON original est d’abord sérialisé, puis chiffré via ECIES, puis encodé en base64.
+---
+
+## Espace utilisé sur NTAG215 (504 octets max)
+
+###  Capsule de ressource (`badge_type: 0x00`)
+
+| Champ              | Taille typique     |
+| ------------------ | ------------------ |
+| `0x01` URL         | \~120 à 200 octets |
+| `0x02` Langue      | 2 octets           |
+| `0x03` Titre       | \~32 à 64 octets   |
+| `0x04` Tag péd.    | 3 octets           |
+| `0x05` Rétention   | 1 octet            |
+| `0x06` Expiration  | 4 octets           |
+| `0xF2` Hash        | 32 octets          |
+| `0xF3` Signature   | 64 octets          |
+| `0xF4` AuthorityID | 8 octets           |
+| `0xFF` Fin         | 0 à 2 octets       |
+| **Total**          | **\~330 à 430 o**  |
+
+### Badge de configuration (`badge_type: 0x01`)
+
+| Champ               | Taille typique   |
+| ------------------- | ---------------- |
+| `0xE0` Type         | 1 octet          |
+| `0xE1` Payload JSON | \~30 à 150 o     |
+| `0xFF` Fin          | 0 à 2 octets     |
+| **Total**           | **\~40 à 160 o** |
+
+> Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
+
+###  Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
+
+| Champ                        | Taille typique         |
+| ---------------------------- | ---------------------- |
+| URL (`0x01`)                 | \~120 à 200 octets     |
+| Langue (`0x02`)              | 2 octets               |
+| Titre (`0x03`)               | \~32 à 64 octets       |
+| Tag pédagogique (`0x04`)     | 3 octets               |
+| Rétention (`0x05`)           | 1 octet                |
+| Expiration (`0x06`)          | 4 octets               |
+| Payload config JSON (`0xE1`) | \~50 à 100 o           |
+| Hash (`0xF2`)                | 32 octets              |
+| Signature (`0xF3`)           | 64 octets              |
+| Authority ID (`0xF4`)        | 8 octets               |
+| Fin (`0xFF`)                 | 0 à 2 octets           |
+| **Total**                    | **\~370 à 480 octets** |
+
+> Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
+
+### Badge d’administration (`badge_type: 0x02`)
+
+| Champ                  | Taille typique    |
+| ---------------------- | ----------------- |
+| `0xE0` Type            | 1 octet           |
+| `0xE1` Payload chiffré | \~64 à 128 o      |
+| `0xF2` Hash            | 32 octets         |
+| `0xF3` Signature       | 64 octets         |
+| `0xF4` AuthorityID     | 8 octets          |
+| `0xFF` Fin             | 0 à 2 octets      |
+| **Total**              | **\~170 à 240 o** |
 
 ---
 
-### 🔍 Détails :
+## Outils recommandés
 
-* `hash` : SHA256 des TLV `[0x01→0x07]`, **encodé en hexadécimal** (64 caractères, 32 octets binaires).
-* `signature` : Signature **Ed25519 brute**, encodée en hexadécimal (64 octets binaires).
-* `authority_id` : Tableau explicite de 8 octets, big-endian.
+### CLI ou lib de référence 
+
+* Encodage / décodage de capsules
+* Signature via clé locale
+* Vérification par clé publique
+* Export/import en JSON
 
 ---
 
-Souhaites-tu aussi la version TLV binaire en hexdump brut de cette capsule ?
-
----
-
-## 🧠 Modes de lecture
+## Modes de lecture
 
 | Mode      | Description                                                       |
 | --------- | ----------------------------------------------------------------- |
@@ -533,7 +469,7 @@ Souhaites-tu aussi la version TLV binaire en hexdump brut de cette capsule ?
 
 ---
 
-## 🔐 Types de badges et sécurité
+## Types de badges et sécurité
 
 | Type           | Signature requise | Chiffrement requis | Persistant |
 | -------------- | ----------------- | ------------------ | ----------- |
@@ -543,26 +479,26 @@ Souhaites-tu aussi la version TLV binaire en hexdump brut de cette capsule ?
 
 ---
 
-## 🔮 Évolutivité et versioning
+## Évolutivité et versioning
 
 * Le champ `0x00` pourra servir à versionner le format (réservé à un usage futur).
-* Les plages `0x10–0xEF` sont disponibles pour des extensions propriétaires ou publiques.
+* Les plages `0x10–0xDF` sont disponibles pour des extensions propriétaires ou publiques.
 
 ---
 
-## 📌 Conclusion
+##  Conclusion
 
 Le format **ICF v1** est :
 
-* ✅ **Facile à implémenter**
-* 🔐 **Sûr** (via Ed25519 + SHA256)
-* 📦 **Compact** (504 o max)
-* 🧱 **Extensible** (balises réservées, version possible)
-* 🧑‍🏫 **Pédagogiquement utile** (tag éducatif natif)
+* **Facile à implémenter**
+* **Sûr** (via Ed25519 + SHA256)
+* **Compact** (504 o max)
+* **Extensible** (balises réservées, version possible)
+* **Pédagogiquement utile** (tag éducatif natif)
 
 ---
 
-## 📇 Références & Crédits
+##  Références & Crédits
 
 **IOBEWI Capsule Format (ICF v1)** est une spécification ouverte, conçue et maintenue par **IOBEWI**, dans le cadre du projet open source **Balabewi**.
 
@@ -572,20 +508,20 @@ Il permet également d’**authentifier l’émetteur** de l’information — p
 
 ---
 
-**👤 Auteur & éditeur**
-🛠️ IOBEWI
-🌐 [https://iobewi.com](https://iobewi.com)
-📧 [contact@iobewi.com](mailto:contact@iobewi.com)
+** Auteur & éditeur**
+ IOBEWI
+ [https://iobewi.com](https://iobewi.com)
+ [contact@iobewi.com](mailto:contact@iobewi.com)
 
 ---
 
-**📜 Licence de la spécification**
+** Licence de la spécification**
 Le format ICF est publié sous licence [**CC-BY-SA 4.0**](https://creativecommons.org/licenses/by-sa/4.0/),
  vous pouvez copier, adapter et partager la documentation et les formats, à condition de citer la source et de partager vos contributions sous la même licence.
 
 ---
 
-**🔑 Références techniques**
+** Références techniques**
 
 * RFC 7049 — Concise Binary Object Representation (CBOR)
 * ISO 7816-4 — Interindustry commands for interchange

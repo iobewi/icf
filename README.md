@@ -5,7 +5,7 @@ de manipuler le **IOBEWI Capsule Format (ICF)**. Ce format TLV signé a été co
 pour encoder de manière compacte et sécurisée des métadonnées sur des puces RFID
 (utilisées notamment dans le projet Balabewi).
 
-- La [documentation utilisateur de la CLI](icf/cli/README.md) décrit en détail
+- La [documentation utilisateur de la CLI](cli/README.md) décrit en détail
   les commandes disponibles et fournit plusieurs exemples d'usage.
 - La [spécification complète du format ICF](doc/SPEC-ICF.md) présente la structure
   des capsules et les mécanismes cryptographiques employés.

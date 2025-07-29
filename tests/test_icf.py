@@ -18,7 +18,7 @@ except ModuleNotFoundError:
     )
     STUB = True
 
-from icf.cli.icf import icfCapsule, BadgeType
+from cli.icf import icfCapsule, BadgeType
 
 class OpenSSLPrivateKey:
     def __init__(self):
@@ -104,12 +104,12 @@ def test_cli_list_tags_runs():
             (
                 'import sys, runpy, tests.cryptography_stub as cryptography; '
                 'sys.modules["cryptography"] = cryptography; '
-                'sys.argv=["icf.cli.icfcli", "list-tags"]; '
-                'runpy.run_module("icf.cli.icfcli", run_name="__main__")'
+                'sys.argv=["cli.icfcli", "list-tags"]; '
+                'runpy.run_module("cli.icfcli", run_name="__main__")'
             )
         ]
     else:
-        cmd = [sys.executable, '-m', 'icf.cli.icfcli', 'list-tags']
+        cmd = [sys.executable, '-m', 'cli.icfcli', 'list-tags']
     res = subprocess.run(cmd, capture_output=True, text=True)
     assert res.returncode == 0
     assert 'Cycles pédagogiques' in res.stdout
