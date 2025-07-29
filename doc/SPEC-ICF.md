@@ -503,21 +503,21 @@ Il permet également d’**authentifier l’émetteur** de l’information — p
 
 ---
 
-## ** Auteur & éditeur**
+## **Auteur & éditeur**
 **IOBEWI**
 
-[https://iobewi.com](https://iobewi.com)
+[https://www.iobewi.com](https://www.iobewi.com)  
 [contact@iobewi.com](mailto:contact@iobewi.com)
 
 ---
 
-## ** Licence de la spécification**
-Le format ICF est publié sous licence [**CC-BY-SA 4.0**](https://creativecommons.org/licenses/by-sa/4.0/),
+## **Licence de la spécification**
+Le format ICF est publié sous licence [**CC-BY-SA 4.0**](https://creativecommons.org/licenses/by-sa/4.0/),  
 vous pouvez copier, adapter et partager la documentation et les formats, à condition de citer la source et de partager vos contributions sous la même licence.
 
 ---
 
-## ** Références techniques**
+## **Références techniques**
 
 * RFC 7049 — Concise Binary Object Representation (CBOR)
 * ISO 7816-4 — Interindustry commands for interchange
