@@ -20,6 +20,18 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 from cryptography.hazmat.primitives import serialization
 
+# Champs ignorés selon le type de badge. Permet d'afficher dynamiquement
+# des avertissements si l'utilisateur fournit des options non prises en
+# charge pour un type donné.
+IGNORED_FIELDS = {
+    BadgeType.CONFIGURATION: [
+        'url', 'tag', 'expires', 'title', 'retention'
+    ],
+    BadgeType.ADMINISTRATION: [
+        'url', 'tag', 'retention', 'language', 'title'
+    ],
+}
+
 
 def parse_badge_type(value: str) -> BadgeType:
     """Parse a badge type from CLI argument."""
@@ -66,36 +78,36 @@ def validate_badge_fields(args) -> None:
     elif btype == BadgeType.CONFIGURATION:
         if not args.payload:
             sys.exit("Erreur : une capsule de configuration nécessite --payload.")
-        warnings = []
-        if args.url:
-            warnings.append("--url")
-        if args.tag:
-            warnings.append("--tag")
-        if args.expires is not None:
-            warnings.append("--expires")
-        if args.title:
-            warnings.append("--title")
-        if args.retention is not None:
-            warnings.append("--retention")
-        for w in warnings:
-            print(f"⚠️ Avertissement : {w} n\u2019est pas utilisé pour un badge de configuration.")
 
     elif btype == BadgeType.ADMINISTRATION:
         if not args.payload:
             sys.exit("Erreur : une capsule d’administration nécessite un --payload chiffré.")
-        warnings = []
-        if args.url:
-            warnings.append("--url")
-        if args.tag:
-            warnings.append("--tag")
-        if args.retention is not None:
-            warnings.append("--retention")
-        if args.language:
-            warnings.append("--language")
-        if args.title:
-            warnings.append("--title")
-        for w in warnings:
-            print(f"⚠️ Avertissement : {w} n\u2019est pas utilisé pour un badge d’administration.")
+        if args.payload:
+            p = Path(args.payload)
+            payload_data = p.read_bytes() if p.exists() else args.payload.encode("utf-8")
+            try:
+                payload_data.decode("utf-8")
+                print(
+                    "⚠️ Avertissement : le payload semble être du texte lisible. "
+                    "Le badge admin doit contenir une donnée chiffrée."
+                )
+            except Exception:
+                pass
+
+    # Warn about ignored fields dynamically
+    warnings = []
+    for field in IGNORED_FIELDS.get(btype, []):
+        val = getattr(args, field, None)
+        if field in ("expires", "retention"):
+            if val is not None:
+                warnings.append(f"--{field}")
+        else:
+            if val:
+                warnings.append(f"--{field}")
+    for w in warnings:
+        print(
+            f"⚠️ Avertissement : {w} n’est pas utilisé pour un badge {btype}."
+        )
 
 
 def encode_icf(args):
