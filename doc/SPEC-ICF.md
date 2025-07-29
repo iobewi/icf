@@ -78,9 +78,9 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Type de données** : ISO 639-1
 * **Contenu** : Code à deux lettres représentant la langue principale du contenu numerique
 * **Obligatoire** : Non, mais recommandé
-
-> Filtrage de contenu par langue dans une interface multilingue
-> Limitation géographique ou pédagogique selon la langue cible
+* **Utilité** : 
+  * Filtrage de contenu par langue dans une interface multilingue
+  * Limitation géographique ou pédagogique selon la langue cible
 
 ### `0x03` – Titre
 
@@ -88,8 +88,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Type de données** : UTF-8
 * **Contenu** : Titre lisible du média (ex. : *Histoires de pirates*)
 * **Obligatoire** : Non, mais recommandé
-
-> Affichage dans une interface de supervision ou app mobile, classement, export
+* **Utilité** : Affichage dans une interface de supervision ou app mobile, classement, export
 
 ### `0x04` – Tag pédagogique
 
@@ -100,8 +99,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
   * Octet 2 → **Matière ou thème**
   * Octet 3 → **Sous-classe libre**
 * **Obligatoire** : Non, mais recommandé
-
-> Filtrage, gouvernance pédagogique, intégration dans un ENT ou interface métier
+* **Utilité** : Filtrage, gouvernance pédagogique, intégration dans un ENT ou interface métier
 
 #### Tableau des cycles (octet 1)
 
@@ -131,7 +129,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 | `0xFF`       | Réservé usage futur      |
 
 #### Sous-classe libre (octet 3)
-²
+
 * Utilisation libre par l’émetteur de la capsule (enseignant, app mobile…)
 * Peut désigner :
   * un niveau précis (ex. : CE1 → 0x11)
@@ -380,7 +378,7 @@ Le champ `system_payload` dans l’exemple JSON est une chaîne binaire chiffré
   "signature": "<signature_ed25519>",
   "authority_id": [1, 35, 69, 103, 137, 171, 205, 239]
 }
-````
+```
 
 ---
 
@@ -505,20 +503,21 @@ Il permet également d’**authentifier l’émetteur** de l’information — p
 
 ---
 
-** Auteur & éditeur**
- IOBEWI
- [https://iobewi.com](https://iobewi.com)
- [contact@iobewi.com](mailto:contact@iobewi.com)
+## ** Auteur & éditeur**
+**IOBEWI**
+
+[https://iobewi.com](https://iobewi.com)
+[contact@iobewi.com](mailto:contact@iobewi.com)
 
 ---
 
-** Licence de la spécification**
+## ** Licence de la spécification**
 Le format ICF est publié sous licence [**CC-BY-SA 4.0**](https://creativecommons.org/licenses/by-sa/4.0/),
- vous pouvez copier, adapter et partager la documentation et les formats, à condition de citer la source et de partager vos contributions sous la même licence.
+vous pouvez copier, adapter et partager la documentation et les formats, à condition de citer la source et de partager vos contributions sous la même licence.
 
 ---
 
-** Références techniques**
+## ** Références techniques**
 
 * RFC 7049 — Concise Binary Object Representation (CBOR)
 * ISO 7816-4 — Interindustry commands for interchange
