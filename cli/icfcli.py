@@ -52,9 +52,9 @@ def load_public_key(path: str) -> Ed25519PublicKey:
         return serialization.load_pem_public_key(f.read())
 
 
-def write_capsule(args):
+def encode_icf(args):
     """
-    Encode une capsule ICF à partir des paramètres CLI et la signe avec une clé privée.
+    Encode un binaire ICF à partir des paramètres CLI et la signe avec une clé privée.
     Le résultat est écrit sous forme binaire TLV dans un fichier `.icf`.
     """
     cap = icfCapsule()
@@ -86,12 +86,12 @@ def write_capsule(args):
     encoded = cap.encode_full()
     with open(args.output, 'wb') as f:
         f.write(encoded)
-    print(f"Capsule écrite dans {args.output}")
+    print(f"Binaire ICF écrite dans {args.output}")
 
 
-def read_capsule(args):
+def decode_icf(args):
     """
-    Lit et décode une capsule ICF depuis un fichier `.icf`.
+    Lit et décode un binaire ICF depuis un fichier `.icf`.
     Vérifie la signature si une clé publique est fournie.
     Affiche les données au format JSON.
     """
@@ -108,7 +108,7 @@ def read_capsule(args):
         btype = BadgeType.RESSOURCE
     print(f"Type de badge : {btype}")
 
-    print("📦 Contenu capsule (JSON) :")
+    print("📦 Contenu binaire ICF (JSON) :")
     print(json.dumps(cap.to_dict(), indent=2))
 
     print("\nTag pédagogique (décodé) :", cap.tag_str())
@@ -172,13 +172,13 @@ def main():
     encode.add_argument('--private-key', required=True)
     encode.add_argument('--authority-id', required=True, help='8-byte hex (ex: 0123456789ABCDEF)')
     encode.add_argument('--output', required=True, help='Output capsule file')
-    encode.set_defaults(func=write_capsule)
+    encode.set_defaults(func=encode_icf)
 
     # Commande decode
     decode = sub.add_parser('decode', help='Decode and verify a capsule')
     decode.add_argument('--input', required=True)
     decode.add_argument('--public-key', help='PEM file to verify signature')
-    decode.set_defaults(func=read_capsule)
+    decode.set_defaults(func=decode_icf)
 
     # Commande list-tags
     list_tag = sub.add_parser('list-tags', help='Liste les cycles et matières pédagogiques disponibles')
