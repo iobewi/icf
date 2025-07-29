@@ -2,8 +2,8 @@
 icfcli.py – Interface CLI pour le IOBEWI Capsule Format (BCF / ICF)
 
 Permet de :
-- générer une capsule signée (`write`)
-- lire et vérifier une capsule (`read`)
+- générer un binaire copiable sur une puce RFID (`encode`)
+- lire et vérifier une capsule (`decode`)
 - afficher les tags pédagogiques (`list-tags`)
 - exporter une capsule au format JSON (`export-json`)
 - importer et signer une capsule depuis JSON (`import-json`)
@@ -13,7 +13,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from icf import icfCapsule, Cycle, Matiere, BadgeType
+from cli.icf import icfCapsule, Cycle, Matiere, BadgeType
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
 from cryptography.hazmat.primitives import serialization
 
@@ -159,26 +159,26 @@ def main():
     parser = argparse.ArgumentParser(description='icf Capsule CLI')
     sub = parser.add_subparsers(dest='cmd', required=True)
 
-    # Commande write
-    write = sub.add_parser('write', help='Encode and sign a capsule')
-    write.add_argument('--url', required=True)
-    write.add_argument('--language')
-    write.add_argument('--title')
-    write.add_argument('--badge-type', type=parse_badge_type,
-                       help='ressource, configuration ou administration')
-    write.add_argument('--retention', type=int)
-    write.add_argument('--tag', help='cycle,subject,sub (ex: 2,6,66)')
-    write.add_argument('--expires', type=int, help='UNIX timestamp')
-    write.add_argument('--private-key', required=True)
-    write.add_argument('--authority-id', required=True, help='8-byte hex (ex: 0123456789ABCDEF)')
-    write.add_argument('--output', required=True, help='Output capsule file')
-    write.set_defaults(func=write_capsule)
+    # Commande encode
+    encode = sub.add_parser('encode', help='Encode and sign a capsule')
+    encode.add_argument('--url', required=True)
+    encode.add_argument('--language')
+    encode.add_argument('--title')
+    encode.add_argument('--badge-type', type=parse_badge_type,
+                        help='ressource, configuration ou administration')
+    encode.add_argument('--retention', type=int)
+    encode.add_argument('--tag', help='cycle,subject,sub (ex: 2,6,66)')
+    encode.add_argument('--expires', type=int, help='UNIX timestamp')
+    encode.add_argument('--private-key', required=True)
+    encode.add_argument('--authority-id', required=True, help='8-byte hex (ex: 0123456789ABCDEF)')
+    encode.add_argument('--output', required=True, help='Output capsule file')
+    encode.set_defaults(func=write_capsule)
 
-    # Commande read
-    read = sub.add_parser('read', help='Decode and verify a capsule')
-    read.add_argument('--input', required=True)
-    read.add_argument('--public-key', help='PEM file to verify signature')
-    read.set_defaults(func=read_capsule)
+    # Commande decode
+    decode = sub.add_parser('decode', help='Decode and verify a capsule')
+    decode.add_argument('--input', required=True)
+    decode.add_argument('--public-key', help='PEM file to verify signature')
+    decode.set_defaults(func=read_capsule)
 
     # Commande list-tags
     list_tag = sub.add_parser('list-tags', help='Liste les cycles et matières pédagogiques disponibles')
