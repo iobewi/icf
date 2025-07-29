@@ -15,6 +15,7 @@ Cette bibliothèque et son interface en ligne de commande permettent de manipule
 - Export et import JSON
 - Enums intégrés pour les tags pédagogiques (`Cycle`, `Matiere`)
 - Affichage lisible (`tag_str()`)
+- Gestion du champ `system_payload` pour la configuration ou l'administration
 
 ### 🛠️ Interface CLI (`icfcli.py`)
 
@@ -40,6 +41,7 @@ python3 icfcli.py encode  \
   --retention 14 \
   --tag 2,6,42 \
   --expires 1760000000 \
+  --payload '{"volume": 70}' \
   --private-key cle.pem \
   --authority-id 0123456789ABCDEF \
   --output sortie.icf
