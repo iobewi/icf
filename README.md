@@ -1,7 +1,7 @@
 # 📦 IOBEWI Capsule Format (ICF)
 
-Cette repository contient la librairie Python et la ligne de commande permettant
-de manipuler le **IOBEWI Capsule Format (ICF)**. Ce format TLV signé a été conçu
+Ce repository contient la librairie Python et la ligne de commande permettant de 
+manipuler le **IOBEWI Capsule Format (ICF)**. Ce format TLV signé a été conçu
 pour encoder de manière compacte et sécurisée des métadonnées sur des puces RFID
 (utilisées notamment dans le projet Balabewi).
 
