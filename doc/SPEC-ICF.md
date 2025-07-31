@@ -206,22 +206,20 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 
 > Un seul TLV `0xE1` est attendu par badge. Si plusieurs sont présents, seul le premier peut être pris en compte.
 
-
 #### Badge d’administration (`badge_type: 0x02`)
 
-* Le champ `0xE1` d’un badge de type `0x02` est destiné à contenir une donnée chiffrée.
-* Le format, l’algorithme, la clé publique, et les mécanismes de vérification **ne relèvent pas du format ICF**, mais du logiciel embarqué du lecteur.
-* L’ICF n’impose ni mode cryptographique, ni encodage particulier, mais garantit que le champ est bien identifié et réservé à cet usage.
+* Le champ `0xE1` d’un badge de type `0x02` contient une **donnée chiffrée**, représentant une commande ou un paramètre critique destiné à être appliqué de manière persistante sur un ou plusieurs appareils.
+* Il est **systématiquement chiffré** via **ECIES/X25519**, à l’aide de la **clé publique dérivée de `SK_admin`**, une clé privée partagée et installée localement sur un groupe d'appareils appairés.
+* Ce mécanisme permet de **chiffrer la donnée une seule fois**, tout en la rendant **déchiffrable par tous les appareils** du groupe.
 
-### `0xF2` – Hash SHA256
+> Ce modèle est sécurisé tant que :
+>
+> * la donnée est considérée comme **commune au groupe**,
+> * la clé privée `SK_admin` est **protégée localement** (par exemple via chiffrement de la flash),
+> * la capsule est **signée par une autorité de confiance**.
 
-* **Taille** : 32 octets
-* **Algorithme** : SHA256
-* **Contenu** : Empreinte cryptographique calculée sur la séquence TLV précédente (du premier champ jusqu'au dernier champ avant `0xF2`, **exclu**)
-* **Utilité** : Garantit l'intégrité de la capsule et permet de vérifier l'authenticité via la signature Ed25519 (champ `0xF3`)
-
-> Ce champ est obligatoire dès qu'une signature est présente. Il constitue le message clair à signer, et est donc prérequis pour l'authentification du contenu par une autorité.
-> Le hash est calculé sur le buffer binaire concaténé des TLV précédents (hors 0xF2, 0xF3, 0xF4, 0xFF), dans l'ordre d’apparition.
+* Le contenu du champ `0xE1` est une **structure JSON sérialisée**, chiffrée via ECIES, puis **encodée en base64**.
+* La **signature Ed25519** (champ `0xF3`) atteste que le badge provient d’un émetteur autorisé, identifié via le champ `0xF4` (`authority_id`).
 
 ### `0xF3` – Signature cryptographique
 
@@ -472,6 +470,90 @@ Le champ `system_payload` dans l’exemple JSON est une chaîne binaire chiffré
 | Configuration  | Non | Non | Non |
 | Administration | Oui | Oui (ECIES) | Oui |
 
+---
+
+## Sécurité cryptographique et gestion des clés
+
+Le format ICF intègre un modèle de sécurité basé sur une **signature Ed25519** pour authentifier l’émetteur, et, dans le cas des badges d’administration (`badge_type: 0x02`), sur un **chiffrement asymétrique ECIES/X25519** du champ `0xE1`.
+Deux approches sont possibles pour le chiffrement de la donnée sensible :
+
+### Solution retenue — Clé partagée entre lecteurs (`SK_admin`)
+
+* Une clé privée `SK_admin` est **générée une seule fois** par l’application mobile (ou la CLI) lors de l’initialisation.
+* Elle est **copiée localement sur chaque appareil** au moment de l’appairage (via une session chiffrée ou flash encryption).
+* Le champ `0xE1` du badge est chiffré **une seule fois** avec la **clé publique dérivée de `SK_admin`** (via X25519).
+* Chaque lecteur peut déchiffrer cette donnée localement.
+* Ce modèle est :
+
+  * **simple** (un seul chiffrement pour N lecteurs),
+  * **efficace** (espace optimisé sur la puce),
+  * **suffisamment sûr** si le firmware utilise le **chiffrement de flash actif** (flash encryption),
+  * **interopérable** (le badge est lisible par tous les lecteurs appairés).
+
+> **Remarque** : la clé `SK_admin` n'est jamais exposée dans le badge, seule sa dérivée publique l’est, dans le cadre du chiffrement ECIES.
+
+flowchart TB
+
+    SK_sig[Clé privée de signature<br>SK_sig Ed25519]:::priv
+    PK_sig[Clé publique de signature<br>PK_sig Ed25519]:::pub
+    PK_sig_local[Clé publique de signature<br>PK_sig Ed25519]:::pub
+    SK_master[Clé maître de groupe<br>SK_master X25519]:::priv
+    SK_admin[Clé ECIES partagée<br>SK_admin ]:::priv
+    PK_admin[Clé publique ECIES<br>PK_admin]:::pub
+    authority_id[Authority ID  <br>ex: 0x012345...]:::meta
+    pub_registry[Table des autorités<br>authority_id → PK_sig]:::tab     
+    pub_table[Table embarquée<br>authority_id → PK_sig]:::pub
+    SK_admin_local[SK_admin stockée localement<br> volume  chiffré]:::priv
+
+
+    %% Phase 1 : Génération des clés côté émetteur
+    subgraph Client["Construction (App mobile / CLI)"]
+        direction TB
+        SK_sig -->|génère| PK_sig
+        authority_id  -->|indexée dans| pub_registry
+        PK_sig -->|indexée dans| pub_registry
+
+        SK_master -->|dérive| SK_admin
+        SK_admin -->|génère| PK_admin
+    end
+
+    %% Phase 2 : Configuration initiale du lecteur
+    subgraph Lecteur["Interprétation (Lecteur Balabewi)"]
+        direction TB
+        pub_registry -->|copiée| pub_table
+        SK_admin -->|copiée vers lecteur| SK_admin_local
+    end
+
+
+    %% Construction de la capsule
+    subgraph Client["Construction (App mobile / CLI)"]
+        direction TB
+        SK_sig -->|signe F2 : SHA256 des TLV| capsule_f3[Signature]
+        authority_id -->|copié dans capsule| capsule_f4[Authority ID]
+        PK_admin -->|chiffre payload JSON| capsule_e1[Payload chiffré]
+    end
+
+    %% Capsule
+    subgraph Capsule["Capsule CIF"]
+        capsule_f3 --> 0xF3
+        capsule_f4 --> 0xF4
+        capsule_e1 --> 0xF1
+    end
+
+    %% Utilisation côté lecteur
+    subgraph Lecteur["Interprétation (Lecteur Balabewi)"]
+        direction TB
+
+        0xF4 -->|lookup - authority_id| pub_table
+        0xF3 -->|verify - signature| PK_sig_local
+        0xF1 -->|decrypt - payload| SK_admin_local
+        pub_table --> |extarct| PK_sig_local
+        PK_sig_local --> |valide|cap[IOBEWI Capsule]
+        SK_admin_local --> |Déchiffre| Payload
+
+    end
+
+    
 ---
 
 ## Évolutivité et versioning
