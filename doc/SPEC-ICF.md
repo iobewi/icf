@@ -491,7 +491,7 @@ Deux approches sont possibles pour le chiffrement de la donnée sensible :
   * **interopérable** (le badge est lisible par tous les lecteurs appairés).
 
 > **Remarque** : la clé `SK_admin` n'est jamais exposée dans le badge, seule sa dérivée publique l’est, dans le cadre du chiffrement ECIES.
-
+```mermaid
 flowchart TB
 
     SK_sig[Clé privée de signature<br>SK_sig Ed25519]:::priv
@@ -552,7 +552,7 @@ flowchart TB
         SK_admin_local --> |Déchiffre| Payload
 
     end
-
+```
     
 ---
 
