@@ -1,35 +1,66 @@
-/* Couleur de fond claire pour la sidebar */
+/* === Sidebar full light === */
+.wy-nav-side {
+  background: #f6f7f9 !important;         /* fond clair uniforme */
+  border-right: 1px solid #e2e5ea;
+}
+
+/* Zone logo + search */
 .wy-side-nav-search {
-    background-color: #f4f4f4 !important;
+  background: #f6f7f9 !important;
+  padding-top: 14px;
+  padding-bottom: 12px;
 }
-
-/* Ajustement du champ de recherche */
-.wy-side-nav-search input[type="text"] {
-    border: 1px solid #ccc;
-    background-color: #fff;
-    color: #000;
-}
-
-/* Couleur du texte des liens dans la sidebar */
-.wy-menu-vertical a {
-    color: #222 !important;
-}
-
-/* Hover des liens dans la sidebar */
-.wy-menu-vertical a:hover {
-    background-color: #ddd !important;
-    color: #000 !important;
-}
-
-/* Lien actif dans la sidebar */
-.wy-menu-vertical li.current > a {
-    background-color: #bbb !important;
-    color: #000 !important;
-}
-
-/* Forcer le fond derrière le logo */
 .wy-side-nav-search img {
-    background-color: #f4f4f4;
-    padding: 5px;
-    border-radius: 4px;
+  display: block;
+  margin: 0 auto 8px auto;                 /* centre le logo */
+  max-height: 64px;                        /* ajuste si tu veux plus grand */
+  width: auto;
+  background: transparent;                 /* pas de pastille blanche */
 }
+
+/* Champ de recherche */
+.wy-side-nav-search input[type="text"] {
+  background: #ffffff;
+  color: #111;
+  border: 1px solid #cfd6df;
+  box-shadow: none;
+}
+
+/* Menu liens (normal, hover, actif) */
+.wy-menu-vertical a {
+  color: #1a1f2b !important;
+  background: transparent !important;
+}
+.wy-menu-vertical a:hover {
+  background: #e8ecf1 !important;
+  color: #000 !important;
+}
+.wy-menu-vertical li.current > a,
+.wy-menu-vertical li.toctree-l1.current > a {
+  background: #dbe3ec !important;
+  color: #000 !important;
+  font-weight: 600;
+}
+.wy-menu-vertical li span.toctree-expand {
+  filter: none; /* évite les chevrons trop pâles */
+}
+
+/* Couleur des séparateurs et sous-niveaux */
+.wy-menu-vertical ul {
+  border-top: 1px solid #e9edf2;
+}
+.wy-menu-vertical li ul li a {
+  color: #2a3140 !important;
+}
+
+/* Contenu central inchangé mais liens plus iobewi */
+.rst-content a {
+  color: #0baec0;           /* cyan iobewi-ish */
+}
+.rst-content a:hover {
+  color: #088b9a;
+}
+
+/* Admonitions un peu brandées */
+.rst-content .note, .rst-content .admonition.note { border-left: 4px solid #12c6d3; }
+.rst-content .warning, .rst-content .admonition.warning { border-left: 4px solid #ffb347; }
