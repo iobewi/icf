@@ -4,18 +4,23 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 
-project = 'ICF Specification'
-copyright = '2025, IOBEWI'
+
+import datetime
+
+current_year = datetime.datetime.now().year
+
+project = 'ICF Specification Guide'
+copyright = '2025 - {} , IOBEWI'.format(current_year)
 author = 'IOBEWI'
 release = '1.0'
 
 extensions = [
-    'myst_parser',
     'sphinx_rtd_theme'
 ]
 
-templates_path = ['_templates']
-exclude_patterns = []
+source_suffix = {
+    ".rst": "restructuredtext",
+}
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
