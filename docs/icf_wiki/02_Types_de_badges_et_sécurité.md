@@ -1,9 +1,0 @@
-Types de badges et sécurité
-
-| Type           | Signature requise | Chiffrement requis | Persistant |
-| -------------- | ----------------- | ------------------ | ----------- |
-| Ressource      | Optionnel / Requis selon mode | Non | Non |
-| Configuration  | Non | Non | Non |
-| Administration | Oui | Oui (ECIES) | Oui |
-
----

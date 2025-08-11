@@ -1,117 +1,91 @@
 Gouvernance du registre ICF
 ===========================
 
-Le présent document définit comment sont gérés les **tags TLV
-(0x01–0xFF)**, leur **attribution**, leur **statut** et leur
-**évolution**.
+Le présent document définit la gestion des **tags TLV (0x01–0xFF)** : leur
+**attribution**, leur **statut** et leur **évolution**.
+
+Source de vérité
+----------------
+La **documentation officielle ICF** au format RST constitue la **seule référence valide** pour la définition, l’attribution et le suivi des tags.  
+Aucune autre copie ou dérivé du registre ne fait foi.
 
 Rôles
 -----
 
--  **Maintainers ICF** : garants de la cohérence du registre et de la
-   compatibilité.
--  **Contributeurs** : toute personne ou organisation proposant de
-   nouveaux tags ou modifiant des définitions existantes via Issues/PR.
--  **Implémenteurs** : auteurs de lecteurs/émetteurs compatibles ICF
-   (firmware, apps, outils).
+- **Maintainers ICF** : garants de la cohérence du registre et de la compatibilité.
+- **Contributeurs** : proposent de nouveaux tags ou modifient des définitions via Issues/PR.
+- **Implémenteurs** : développent des lecteurs/émetteurs compatibles ICF (firmware, apps, outils).
 
 Espaces de tags
 ---------------
 
--  ``0x01–0x3F`` : Métadonnées générales (titre, URL, langue, etc.)
--  ``0x40–0x7F`` : Métadonnées média (réservé pour extensions futures)
--  ``0x80–0x8F`` : **Expérimental** (peut changer sans préavis)
--  ``0x90–0x9F`` : **Vendor-Specific** (nécessite préfixe de nommage et
-   documentation)
--  ``0xA0–0xDF`` : Extensions publiques (sur proposition)
--  ``0xE0–0xEF`` : Système & chiffrement (E1…EF)
--  ``0xF0–0xFF`` : Intégrité & autorité (hash, signature, authority_id)
+- ``0x01–0x3F`` : Métadonnées générales (titre, URL, langue…)
+- ``0x40–0x7F`` : Métadonnées média (réservé pour extensions futures)
+- ``0x80–0x8F`` : **Expérimental** (modifiable sans préavis)
+- ``0x90–0x9F`` : **Vendor-Specific** (préfixe obligatoire, doc publique)
+- ``0xA0–0xDF`` : Extensions publiques (sur proposition)
+- ``0xE0–0xEF`` : Système & chiffrement (E1…EF)
+- ``0xF0–0xFF`` : Intégrité & autorité (hash, signature, authority_id)
 
 Statuts des tags
 ----------------
 
--  **Proposé** : description soumise via Issue.
--  **Réservé** : accepté, en attente d’implémentation.
--  **Stable** : présent dans au moins une release avec **vecteurs de
-   test** publiés.
--  **Déprécié** : ne doit plus être utilisé (successeur indiqué).
--  **Retiré** : interdit ; rejet impératif en mode strict.
+- **Proposé** : soumis via Issue.
+- **Réservé** : accepté, en attente d’implémentation.
+- **Stable** : implémenté dans au moins une release avec **vecteurs de test** publiés.
+- **Déprécié** : à remplacer (successeur indiqué).
+- **Retiré** : interdit ; rejet impératif en mode strict.
 
-Chaque entrée du registre indique : *Type*, *Nom*, *Taille max*,
-*Version d’intro*, *Statut*, *Lien vers PR/Issue*, *Notes de
-compatibilité*.
+Chaque entrée de la documentation officielle indique : *Type*, *Nom*, *Taille max*, *Version d’intro*, *Statut*, *Lien PR/Issue*, *Compatibilité*.
 
-Process d’allocation
---------------------
+Processus d’allocation
+----------------------
 
-1. **Issue** avec :
-
-   -  Type souhaité (ou plage), nom, taille, sémantique exacte,
-   -  exemples d’usage, impact sécurité/interop,
-   -  proposition de statut initial (**Proposé**).
-
-2. **Review publique** par les maintainers (+ retours de la communauté).
-3. **Attribution** (mise à jour de ``doc/registry.md``) en **Réservé**.
-4. **Stabilisation** : une **release** (ICF tools/firmware) doit inclure
-   :
-
-   -  implémentation,
-   -  **vecteurs de test** (binaires + manifest),
-   -  documentation. → passage en **Stable**.
-
-5. **Évolution** : tout changement **breaking** nécessite :
-
-   -  nouvelle version de spec,
-   -  phase **Déprécié** avec période de grâce,
-   -  plan de migration & tests.
+1. **Soumission** (Issue) : type/plage, nom, taille, sémantique, exemples, impacts sécurité/interop, statut initial.
+2. **Review publique** : maintainers + communauté.
+3. **Attribution** : ajout dans la documentation officielle au statut **Réservé**.
+4. **Stabilisation** : intégration dans une release avec :
+   - implémentation,
+   - **vecteurs de test** (binaires + manifest),
+   - documentation RST à jour.
+   → passage en **Stable**.
+5. **Évolution** : changement *breaking* → nouvelle version, phase **Déprécié** avec période de grâce, plan de migration & tests.
 
 Règles spécifiques
 ------------------
 
--  **Sécurité (0xE0–0xFF)**
-   Toute proposition affectant ``0xE0–0xFF`` doit :
+- **Sécurité (0xE0–0xFF)** :
+  - Documenter l’impact sécurité,
+  - Fournir **vecteurs de test**,
+  - Définir la politique de compatibilité (rejet strict si absent/invalide).
 
-   -  documenter l’impact sécurité,
-   -  fournir **vecteurs de test**,
-   -  préciser la politique de compat (rejet strict si absent/invalide).
+- **Vendor-Specific (0x90–0x9F)** :
+  - Préfixe obligatoire (ex. ``acme_content_hash``),
+  - Documentation publique minimale,
+  - Interdiction des champs de sécurité (utiliser 0xE0–0xFF).
 
--  **Vendor-Specific (0x90–0x9F)**
+- **Compatibilité stricte** :
+  - Mode strict → rejet : tags **Retirés**, usages hors spec, tailles invalides.
+  - Mode libre → ignorer les tags inconnus, mais refuser tout tag malformé.
 
-   -  Préfixe obligatoire dans le **Nom** (ex. ``acme_content_hash``),
-   -  Documentation publique minimale,
-   -  Interdiction d’y placer des champs **de sécurité** (utiliser
-      0xE0–0xFF).
+Versioning
+----------
 
--  **Compatibilité stricte**
-
-   -  Les lecteurs **mode strict** doivent **rejeter** : tags
-      **Retirés**, usages contredisant la spec, ou *tailles* hors
-      bornes.
-   -  Les lecteurs **mode libre** peuvent ignorer un tag *inconnu* mais
-      **ne doivent pas** tolérer un tag **malformé**.
-
-Versioning & registre
----------------------
-
--  ``doc/registry.md`` est la **source de vérité** des tags.
--  Le tableau “Types TLV définis (v1)” dans ``SPEC-ICF.md`` est
-   **informatif** et doit renvoyer vers le registre.
--  Chaque ligne du registre référence la **PR** qui l’a introduite et la
-   release qui l’a rendue **Stable**.
+- La documentation officielle RST est la **seule source de vérité**.
+- Le tableau “Types TLV définis” présent dans la spécification est **informatif** et renvoie vers la documentation officielle.
+- Chaque ligne du registre officiel référence la **PR** d’introduction et la release de stabilisation.
 
 Dépréciation & retrait
 ----------------------
 
--  **Déprécié** : annoncé dans ``CHANGELOG``, conservé au moins **une
-   version** complète ; fournir un **successeur**.
--  **Retiré** : rejeté en mode strict ; en mode libre, peut être ignoré
-   mais ne doit pas être interprété.
+- **Déprécié** : annoncé dans ``CHANGELOG``, conservé au moins une version complète, avec successeur.
+- **Retiré** : rejeté en mode strict ; en mode libre → ignoré mais non interprété.
 
 Conflits & arbitrage
 --------------------
 
--  Les maintainers tranchent en dernier ressort en privilégiant :
+Les maintainers tranchent en dernier ressort, en priorisant :
 
-   1. la sécurité,
-   2. l’interop,
-   3. la stabilité (pas de breakage inutile).
+1. la sécurité,
+2. l’interopérabilité,
+3. la stabilité (pas de changements inutiles).
