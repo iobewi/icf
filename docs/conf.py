@@ -26,3 +26,4 @@ html_theme_options = {
 }
 
 html_css_files=['custom.css']
+html_favicon = '_static/favicon.ico'  # mets ton favicon ici (optionnel)

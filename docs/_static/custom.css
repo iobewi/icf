@@ -1,66 +1,56 @@
-/* === Sidebar full light === */
-.wy-nav-side {
-  background: #f6f7f9 !important;         /* fond clair uniforme */
-  border-right: 1px solid #e2e5ea;
-}
+/* === POLISH FINAL IOBEWI === */
 
-/* Zone logo + search */
-.wy-side-nav-search {
-  background: #f6f7f9 !important;
-  padding-top: 14px;
-  padding-bottom: 12px;
-}
-.wy-side-nav-search img {
-  display: block;
-  margin: 0 auto 8px auto;                 /* centre le logo */
-  max-height: 64px;                        /* ajuste si tu veux plus grand */
-  width: auto;
-  background: transparent;                 /* pas de pastille blanche */
-}
+/* Sidebar claire (déjà en place, on garde) */
+.wy-nav-side { background:#f6f7f9 !important; border-right:1px solid #e2e5ea; }
+.wy-side-nav-search { background:#f6f7f9 !important; padding:14px 12px 12px; }
+.wy-side-nav-search img { display:block; margin:0 auto 8px; max-height:64px; width:auto; }
 
-/* Champ de recherche */
-.wy-side-nav-search input[type="text"] {
-  background: #ffffff;
-  color: #111;
-  border: 1px solid #cfd6df;
-  box-shadow: none;
+/* Search box plus élégant */
+.wy-side-nav-search input[type="text"]{
+  background:#fff; color:#111; border:1px solid #cfd6df; border-radius:20px; padding:8px 12px;
 }
 
 /* Menu liens (normal, hover, actif) */
-.wy-menu-vertical a {
-  color: #1a1f2b !important;
-  background: transparent !important;
-}
-.wy-menu-vertical a:hover {
-  background: #e8ecf1 !important;
-  color: #000 !important;
-}
+.wy-menu-vertical a { color:#1a1f2b !important; background:transparent !important; }
+.wy-menu-vertical a:hover { background:#e8ecf1 !important; color:#000 !important; }
 .wy-menu-vertical li.current > a,
-.wy-menu-vertical li.toctree-l1.current > a {
-  background: #dbe3ec !important;
-  color: #000 !important;
-  font-weight: 600;
+.wy-menu-vertical li.toctree-l1.current > a { background:#dbe3ec !important; color:#000 !important; font-weight:600; }
+
+/* Boutons Prev/Next aux couleurs iobewi */
+.btn {
+  border:1px solid #0baec0 !important;
+  color:#0baec0 !important;
+  background:#ffffff !important;
+  transition: background .2s ease, color .2s ease;
 }
-.wy-menu-vertical li span.toctree-expand {
-  filter: none; /* évite les chevrons trop pâles */
+.btn:hover {
+  background:#0baec0 !important;
+  color:#ffffff !important;
 }
 
-/* Couleur des séparateurs et sous-niveaux */
-.wy-menu-vertical ul {
-  border-top: 1px solid #e9edf2;
-}
-.wy-menu-vertical li ul li a {
-  color: #2a3140 !important;
-}
+/* Liens dans le contenu */
+.rst-content a { color:#0baec0; }
+.rst-content a:hover { color:#088b9a; }
 
-/* Contenu central inchangé mais liens plus iobewi */
-.rst-content a {
-  color: #0baec0;           /* cyan iobewi-ish */
-}
-.rst-content a:hover {
-  color: #088b9a;
-}
+/* En-têtes un poil plus compacts */
+.rst-content h1 { margin-top:.4rem; }
+.rst-content h2 { margin-top:1.4rem; }
 
-/* Admonitions un peu brandées */
-.rst-content .note, .rst-content .admonition.note { border-left: 4px solid #12c6d3; }
-.rst-content .warning, .rst-content .admonition.warning { border-left: 4px solid #ffb347; }
+/* Admonitions (notes, warnings) un peu brandées */
+.rst-content .note,.rst-content .admonition.note { border-left:4px solid #12c6d3; }
+.rst-content .warning,.rst-content .admonition.warning { border-left:4px solid #ffb347; }
+
+/* Footer discret et centré */
+footer .rst-footer-buttons { margin: 1rem 0; }
+footer { color:#7a869a; }
+.footer {
+  border-top:1px solid #eef1f5;
+  background:#fafbfc;
+}
+.footer .ethical-rtd { display:none; } /* masque le petit badge pub RTD si présent */
+
+/* Logo hover (léger) */
+.wy-side-nav-search img:hover { transform: scale(1.02); transition: transform .12s ease; }
+
+/* Favicon si présent */
+.wy-side-nav-search .logo a { outline: none; }
