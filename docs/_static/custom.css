@@ -1,1 +1,35 @@
-.wy-nav-side{background:#0b1f2a}.wy-side-nav-search{background:#0b1f2a}
+/* Couleur de fond claire pour la sidebar */
+.wy-side-nav-search {
+    background-color: #f4f4f4 !important;
+}
+
+/* Ajustement du champ de recherche */
+.wy-side-nav-search input[type="text"] {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #000;
+}
+
+/* Couleur du texte des liens dans la sidebar */
+.wy-menu-vertical a {
+    color: #222 !important;
+}
+
+/* Hover des liens dans la sidebar */
+.wy-menu-vertical a:hover {
+    background-color: #ddd !important;
+    color: #000 !important;
+}
+
+/* Lien actif dans la sidebar */
+.wy-menu-vertical li.current > a {
+    background-color: #bbb !important;
+    color: #000 !important;
+}
+
+/* Forcer le fond derrière le logo */
+.wy-side-nav-search img {
+    background-color: #f4f4f4;
+    padding: 5px;
+    border-radius: 4px;
+}
