@@ -24,3 +24,5 @@ html_theme_options = {
     'logo_only': True,
     'display_version': True,
 }
+
+html_css_files=['custom.css']
