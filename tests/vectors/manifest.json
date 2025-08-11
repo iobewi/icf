@@ -1,0 +1,48 @@
+[
+  {
+    "file": "lite_valid_1.icf",
+    "expected": {
+      "strict_verify": false,
+      "profile": "lite",
+      "desc": "title+lang"
+    }
+  },
+  {
+    "file": "lite_valid_2.icf",
+    "expected": {
+      "strict_verify": false,
+      "profile": "lite",
+      "desc": "url+lang+ped_tag"
+    }
+  },
+  {
+    "file": "full_valid_1.icf",
+    "expected": {
+      "strict_verify": true,
+      "profile": "full",
+      "desc": "url+title+lang+ped+exp+badge=0"
+    }
+  },
+  {
+    "file": "full_valid_2.icf",
+    "expected": {
+      "strict_verify": true,
+      "profile": "full",
+      "desc": "url+title+lang+ped+ret+exp+badge=0"
+    }
+  },
+  {
+    "file": "invalid_sig.icf",
+    "expected": {
+      "strict_verify": false,
+      "error": "ICF_ERR_INVALID_SIGNATURE"
+    }
+  },
+  {
+    "file": "invalid_missing_tag.icf",
+    "expected": {
+      "strict_verify": false,
+      "error": "ICF_ERR_FORMAT"
+    }
+  }
+]

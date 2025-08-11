@@ -4,6 +4,38 @@ Le format ICF (IOBEWI Capsule Format) est un format TLV conçu par IOBEWI, dans 
 
 ---
 
+## Types TLV définis (v1)
+
+> La **source de vérité** pour l’allocation, le statut (stable/expérimental) et l’historique des tags est le **registre public** : **[registry.md](./registry.md)**.
+
+---
+
+## Types de badges et sécurité
+
+| Type           | Signature requise | Chiffrement requis | Persistant |
+| -------------- | ----------------- | ------------------ | ----------- |
+| Ressource      | Optionnel / Requis selon mode | Non | Non |
+| Configuration  | Non | Non | Non |
+| Administration | Oui | Oui (ECIES) | Oui |
+
+---
+
+## Gouvernance & attribution des tags
+
+La spécification ICF est maintenue par la communauté IOBEWI et des contributeurs externes.
+Les plages de types TLV (`Type`) sont attribuées selon des règles précises afin d'éviter
+les collisions et garantir l'interopérabilité.
+
+Pour proposer un nouveau type TLV :
+1. Ouvrir une *issue* ou une *pull request* dans le dépôt officiel ICF.
+2. Fournir une description complète du champ (type, taille, usage).
+3. Respecter les plages réservées (0xE0–0xFF pour usages spécifiques, sécurité).
+
+La procédure complète et la liste des mainteneurs sont disponibles dans
+[`GOVERNANCE.md`](./GOVERNANCE.md).
+
+---
+
 ## Objectif
 
 Définir un format TLV, appelé IOBEWI Capsule Format (ICF), pérenne, compact et sécurisé, pour encoder des informations sur une puce RFID (NTAG215, 504 octets utiles), utilisée dans les lecteurs audio Balabewi.
@@ -28,25 +60,6 @@ Chaque champ suit la structure TLV :
 | `Value`  | N octets | Donnée encodée                    |
 
 Les TLV sont chaînés les uns à la suite, l'ordre est libre, **sauf pour la signature qui doit clore la séquence**.
-
----
-
-## Types TLV définis (v1)
-
-| Type (hex) | Nom         | Taille max | Description                                                     |
-| ---------- | ----------- | ---------- | --------------------------------------------------------------- |
-| `0x01`     | URL         | 200 o      | Lien HTTP(S) complet vers une ressource numérique               |
-| `0x02`     | Langue      | 2 o        | Code langue ISO 639-1 (`fr`, `en`, `es`…)                       |
-| `0x03`     | Titre       | 64 o       | Titre optionnel du média (UTF-8)                                |
-| `0x04`     | Tag pédagogique | 3 o        | Octet 1 : cycle, Octet 2 : matière, Octet 3 : sous-classe libre |
-| `0x05`     | Rétention   | 1 o        | Durée de conservation du média local (en jours, 0 = non stocké) |
-| `0x06`     | Expiration  | 4 o        | Timestamp d’expiration absolue (UNIX time, big-endian)          |
-| `0xE0`     | Type badge  | 1 o        | 0=ressource, 1=configuration, 2=administration                  |
-| `0xE1–0xEF`| Payload sys.| variable   | Données de config ou commandes admin (encodées en JSON)         |
-| `0xF2`     | Hash        | 32 o       | SHA256 calculé sur tous les TLV précédents                      |
-| `0xF3`     | Signature   | 64 o       | Signature du hash par une autorité locale (Ed25519)             |
-| `0xF4`     | AuthorityID | 8 o        | Identifiant de l'autorité ayant signé le contenu                |
-| `0xFF`     | Fin         | 0 o        | (optionnel) marqueur de fin de capsule                          |
 
 ---
 
@@ -247,6 +260,63 @@ Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de
 * **Taille** : 0 octet
 * **Utilité** : Optionnelle — peut marquer explicitement la fin d’une capsule
 * **Interprétation** : Indique qu’aucun champ ne suit
+
+---
+
+# Addendum — Profils, Readers, et NDEF (aligné sur TLV v1)
+
+Ce document complète SPEC-ICF.md sans modifier la table TLV existante.
+
+## Profils ICF
+
+### ICF-Full (recommandé NTAG215/216)
+**Requis :**
+- `0x01` URL **ou** `0x03` Titre (au moins un des deux)
+- `0xF2` Hash (SHA-256) calculé **sur tous les TLV précédents**
+- `0xF3` Signature Ed25519 **du hash** (valeur de `0xF2`)
+- `0xF4` AuthorityID (8 octets)
+
+**Optionnels :**
+- `0x02` Langue (2 lettres)
+- `0x04` Tag pédagogique (3 octets : cycle, matière, sous-classe)
+- `0x05` Rétention (jours)
+- `0x06` Expiration (u32 epoch)
+- `0xE0` Type badge (0=ressource, 1=config, 2=admin)
+- `0xE1–0xEF` Payload système (JSON ou binaire, usage lecteur)
+
+**Ordre recommandé :**
+```
+[0x01?] [0x02?] [0x03?] [0x04?] [0x05?] [0x06?] [0xE0?] [0xE1–0xEF?] [0xF2] [0xF3] [0xF4] [0xFF?]
+```
+
+### ICF-Lite (NTAG213)
+**Requis :**
+- `0x01` URL **ou** `0x03` Titre
+
+**Optionnels :**
+- `0x02` Langue, `0x06` Expiration, `0x04` Tag pédagogique
+
+**Sécurité :**
+- Pas d’obligation de `0xF2/0xF3/0xF4`. Le lecteur **doit** afficher l’état *Non vérifié* si la signature est absente.
+
+---
+
+## Profils de lecteurs (interop)
+
+- **Reader-L0** : Parse TLV, affiche `URL/Titre`, `Langue`, `Expiration` si présents. Affiche un état de confiance (*Non vérifié* si pas de signature).
+- **Reader-L1** : En plus, calcule `0xF2`, vérifie `0xF3` avec la clé liée à `0xF4`. Affiche *Validé (autorité X)* / *Signature invalide* / *Autorité inconnue*.
+- **Reader-L2** : En plus, déchiffre `0xE1–0xEF` si applicable. L’échec de déchiffrement **ne bloque pas** l’affichage des métadonnées publiques.
+
+---
+
+## ICF sur NDEF
+
+- **Record type** : MIME
+- **MIME type** : `application/vnd.icf+tlv`
+- **Payload** : octets TLV ICF complets (incluant `0xF2`, `0xF3`, `0xF4` si présents)
+- **Message recommandé** : un seul record MIME
+
+**Remarque :** NDEF n’implique **aucune** réaffectation de tags TLV ICF. Les en-têtes NDEF ne sont pas signés ; la confiance repose sur `0xF2/0xF3/0xF4` à l’intérieur du payload ICF.
 
 ---
 
@@ -459,16 +529,6 @@ Le champ `system_payload` dans l’exemple JSON est une chaîne binaire chiffré
 | --------- | ----------------------------------------------------------------- |
 | **Libre** | Tout TLV valide est accepté, signé ou non                         |
 | **Bridé** | Seules les capsules avec `0xF3` et `0xF4` valides sont autorisées |
-
----
-
-## Types de badges et sécurité
-
-| Type           | Signature requise | Chiffrement requis | Persistant |
-| -------------- | ----------------- | ------------------ | ----------- |
-| Ressource      | Optionnel / Requis selon mode | Non | Non |
-| Configuration  | Non | Non | Non |
-| Administration | Oui | Oui (ECIES) | Oui |
 
 ---
 
