@@ -15,18 +15,12 @@ IOBEWI Capsule Format (ICF)
 ========================  ==============================  =====================
 
 .. |Get Started| image:: _static/1F680_color.png
-   :width: 200px
-   :alt: Get Started
 .. _Get Started: get-started/index.html
 
 .. |ICF Specification| image:: _static/1F4DA_color.png
-   :width: 200px
-   :alt: ICF Specification
 .. _ICF Specification: icf-specification/index.html
 
 .. |Tools & Testing| image:: _static/1F6E0_color.png
-   :width: 200px
-   :alt: Tools & Testing
 .. _Tools & Testing: tools/index.html
 
 
