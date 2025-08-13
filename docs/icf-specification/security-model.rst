@@ -22,22 +22,6 @@ Types de badges et sécurité
      - Oui (ECIES)
      - Oui
 
-Gouvernance & attribution des tags
-==================================
-
-La spécification ICF est maintenue par la communauté IOBEWI et des contributeurs externes.
-Les plages de types TLV (`Type`) sont attribuées selon des règles précises afin d'éviter
-les collisions et garantir l'interopérabilité.
-
-Pour proposer un nouveau type TLV :
-1. Ouvrir une *issue* ou une *pull request* dans le dépôt officiel ICF.
-2. Fournir une description complète du champ (type, taille, usage).
-3. Respecter les plages réservées (0xE0–0xFF pour usages spécifiques, sécurité).
-
-La procédure complète et la liste des mainteneurs sont disponibles dans
-[`GOVERNANCE.md`](./GOVERNANCE.md).
-
-
 Objectif
 ========
 
@@ -50,37 +34,6 @@ Ce format vise à :
 * s'adapter au **contexte scolaire ou familial**, en mode bridé ou ouvert,
 * intégrer dès le départ **tous les mécanismes utiles** à la gouvernance, la sécurité et la pérennité des contenus.
 
-Format TLV général
-==================
-
-Chaque champ suit la structure TLV :
-
-.. list-table::
-   :header-rows: 1
-   :widths: 20 15 65
-
-   * - Champ
-     - Taille
-     - Description
-   * - ``Type``
-     - 1 octet
-     - Identifiant du champ
-   * - ``Length``
-     - 1 octet
-     - Taille du champ ``Value`` en octets
-   * - ``Value``
-     - N octets
-     - Donnée encodée
-
-
-Les TLV sont chaînés les uns à la suite, l'ordre est libre, **sauf pour la signature qui doit clore la séquence**.
-
-Convention de codage
-====================
-
-* **Endianness** : tous les entiers multi-octets (timestamps, identifiants) sont codés **big-endian**.
-* **Texte** : chaînes UTF-8 **sans BOM**, maximum strict indiqué par `Length`. Aucun encodage alterné autorisé (ex. UTF-16).
-* **Tolérance** : un lecteur peut ignorer les champs inconnus (`Type ∉ [0x01–0xF4]`) s’il est en mode libre. Il doit rejeter les capsules invalides en mode bridé.
 
 Détail des champs TLV
 =====================
@@ -88,7 +41,7 @@ Détail des champs TLV
 Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière précise, avec son rôle, sa structure, et ses cas d’usage.
 
 `0x01` – URL du contenu
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille maximale** : 200 octets (UTF-8 sans BOM)
 * **Type de données** : chaîne de caractères ASCII ou UTF-8
@@ -99,7 +52,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 > Le lien doit être accessible publiquement, sans authentification, et stable dans le temps.
 
 `0x02` –  Langue
-----------------
+~~~~~~~~~~~~~~~~
 
 * **Taille maximale** : 2 octets
 * **Type de données** : ISO 639-1
@@ -110,7 +63,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
   * Limitation géographique ou pédagogique selon la langue cible
 
 `0x03` – Titre
---------------
+~~~~~~~~~~~~~~
 
 * **Taille maximale** : 64 octets
 * **Type de données** : UTF-8
@@ -119,7 +72,7 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Utilité** : Affichage dans une interface de supervision ou app mobile, classement, export
 
 `0x04` – Tag pédagogique
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille** : 3 octets
 * **Structure** :
@@ -195,7 +148,7 @@ Sous-classe libre (octet 3)
   * Si non utilisé : `0x00`
 
 `0x05` – Durée de rétention
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille** : 1 octet
 * **Type de données** : entier non signé (uint8)
@@ -215,7 +168,7 @@ Sous-classe libre (octet 3)
 > Permet de contrôler la place mémoire et l’actualisation automatique du contenu.
 
 `0x06` – Expiration absolue
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille** : 4 octets
 * **Type de données** : Timestamp UNIX (uint32 big-endian)
@@ -226,7 +179,7 @@ Sous-classe libre (octet 3)
 > Nécessite une horloge interne (RTC) ou une synchronisation réseau (NTP) sur le lecteur.
 
 `0xE0` – Type de badge
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille** : 1 octet
 * **Valeurs possibles** :
@@ -269,7 +222,7 @@ Sous-classe libre (octet 3)
 > Les badges d’administration peuvent modifier de façon persistante la configuration du lecteur (ex: clés Wi-Fi, endpoints, règles de sécurité…).
 
 `0xE1` – Données système (Payloads structurés)
-----------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille** : variable
 * **Contenu** : Charge utile structurée (ex. paramètres de configuration ou commandes internes)
@@ -313,7 +266,7 @@ Badge d’administration (`badge_type: 0x02`)
 * La **signature Ed25519** (champ `0xF3`) atteste que le badge provient d’un émetteur autorisé, identifié via le champ `0xF4` (`authority_id`).
 
 `0xF3` – Signature cryptographique
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille** : 64 octets
 * **Algorithme** : Ed25519
@@ -324,7 +277,7 @@ Badge d’administration (`badge_type: 0x02`)
 > Doit être présent **avec** un champ `0xF4` pour être exploitable par un lecteur sécurisé
 
 `0xF4` – Authority ID
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille** : 8 octets
 * **Type** : identifiant unique d’autorité (uint64 ou chaîne fixe)
@@ -336,7 +289,7 @@ Badge d’administration (`badge_type: 0x02`)
 > Chaque autorité locale (par exemple : école, structure, éditeur) peut disposer de sa propre paire de clés.
 
 `0xFF` – Marqueur de fin
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 * **Taille** : 0 octet
 * **Utilité** : Optionnelle — peut marquer explicitement la fin d’une capsule
@@ -350,7 +303,7 @@ Profils ICF
 ===========
 
 ICF-Full (recommandé NTAG215/216)
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Requis :**
 - `0x01` URL **ou** `0x03` Titre (au moins un des deux)
 - `0xF2` Hash (SHA-256) calculé **sur tous les TLV précédents**
@@ -371,7 +324,7 @@ ICF-Full (recommandé NTAG215/216)
 [0x01?] [0x02?] [0x03?] [0x04?] [0x05?] [0x06?] [0xE0?] [0xE1–0xEF?] [0xF2] [0xF3] [0xF4] [0xFF?]   
 
 ICF-Lite (NTAG213)
-------------------
+~~~~~~~~~~~~~~~~~~
 **Requis :**
 - `0x01` URL **ou** `0x03` Titre
 
@@ -381,7 +334,6 @@ ICF-Lite (NTAG213)
 **Sécurité :**
 - Pas d’obligation de `0xF2/0xF3/0xF4`. Le lecteur **doit** afficher l’état *Non vérifié* si la signature est absente.
 
----
 
 Profils de lecteurs (interop)
 =============================
@@ -390,7 +342,6 @@ Profils de lecteurs (interop)
 - **Reader-L1** : En plus, calcule `0xF2`, vérifie `0xF3` avec la clé liée à `0xF4`. Affiche *Validé (autorité X)* / *Signature invalide* / *Autorité inconnue*.
 - **Reader-L2** : En plus, déchiffre `0xE1–0xEF` si applicable. L’échec de déchiffrement **ne bloque pas** l’affichage des métadonnées publiques.
 
----
 
 ICF sur NDEF
 ============
@@ -402,7 +353,6 @@ ICF sur NDEF
 
 **Remarque :** NDEF n’implique **aucune** réaffectation de tags TLV ICF. Les en-têtes NDEF ne sont pas signés ; la confiance repose sur `0xF2/0xF3/0xF4` à l’intérieur du payload ICF.
 
----
 
 Mécanisme de vérification (lecteur)
 ===================================
@@ -441,7 +391,7 @@ Espace utilisé sur NTAG215 (504 octets max)
 ===========================================
 
 Capsule de ressource (`badge_type: 0x00`)
------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
@@ -471,8 +421,8 @@ Capsule de ressource (`badge_type: 0x00`)
    * - **Total**
      - **\~330 à 430 o**
 
-Badge de configuration (`badge_type: 0x01`)
--------------------------------------------
+Capsule de configuration (`badge_type: 0x01`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
@@ -491,7 +441,7 @@ Badge de configuration (`badge_type: 0x01`)
 > Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
 
 Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
---------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
@@ -525,8 +475,8 @@ Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
 
 > Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
 
-Badge d’administration (`badge_type: 0x02`)
--------------------------------------------
+Capsule d’administration (`badge_type: 0x02`)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. list-table::
    :header-rows: 1
@@ -548,17 +498,6 @@ Badge d’administration (`badge_type: 0x02`)
    * - **Total**
      - **\~170 à 240 o**
 
-Outils recommandés
-==================
-
-CLI ou lib de référence
------------------------
-
-* Encodage / décodage de capsules
-* Signature via clé locale
-* Vérification par clé publique
-* Export/import en JSON
-
 Modes de lecture
 ================
 .. list-table::
@@ -578,7 +517,7 @@ Le format ICF intègre un modèle de sécurité basé sur une **signature Ed2551
 Deux approches sont possibles pour le chiffrement de la donnée sensible :
 
 Solution retenue — Clé partagée entre lecteurs (`SK_admin`)
------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 * Une clé privée `SK_admin` est **générée une seule fois** par l’application mobile (ou la CLI) lors de l’initialisation.
 * Elle est **copiée localement sur chaque appareil** au moment de l’appairage (via une session chiffrée ou flash encryption).
