@@ -8,6 +8,12 @@ IOBEWI Capsule Format (ICF)
    Cette documentation couvre **la spécification ICF**, les **outils associés**,
    ainsi que son **implémentation ESP-IDF** et les guides pour contribuer.
 
+========================  ==============================  =====================
+|Get Started|_            |ICF Specification|_            |Tools & Testing|_
+------------------------  ------------------------------  ---------------------
+`Get Started`_           `ICF Specification`_            `Tools & Testing`_
+========================  ==============================  =====================
+
 .. |Get Started| image:: _static/1F680_color.png
    :width: 200px
    :alt: Get Started
@@ -23,32 +29,6 @@ IOBEWI Capsule Format (ICF)
    :alt: Tools & Testing
 .. _Tools & Testing: tools/index.html
 
-========================  ==============================  =====================
-|Get Started|_            |ICF Specification|_            |Tools & Testing|_
-------------------------  ------------------------------  ---------------------
-`Get Started`_           `ICF Specification`_            `Tools & Testing`_
-========================  ==============================  =====================
-
-.. |Lib ESP-IDF| image:: _static/E1C1.svg
-   :width: 200px
-   :alt: Lib ESP-IDF
-.. _Lib ESP-IDF: lib-esp-idf/index.html
-
-.. |Contribute| image:: _static/1F9E9.svg
-   :width: 200px
-   :alt: Contribute
-.. _Contribute: contribute/index.html
-
-.. |Resources & About| image:: _static/1F12F.svg
-   :width: 200px
-   :alt: Resources & About
-.. _Resources & About: resources/index.html
-
-====================  =========================  =========================
-|Lib ESP-IDF|_        |Contribute|_              |Resources & About|_
---------------------  --------------------------  ------------------------
-`Lib ESP-IDF`_        `Contribute`_              `Resources & About`_
-====================  =========================  =========================
 
 .. toctree::
    :hidden:
