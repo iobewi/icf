@@ -592,65 +592,63 @@ Solution retenue — Clé partagée entre lecteurs (`SK_admin`)
   * **interopérable** (le badge est lisible par tous les lecteurs appairés).
 
 > **Remarque** : la clé `SK_admin` n'est jamais exposée dans le badge, seule sa dérivée publique l’est, dans le cadre du chiffrement ECIES.
-```mermaid
-flowchart TB
 
-    SK_sig[Clé privée de signature<br>SK_sig Ed25519]:::priv
-    PK_sig[Clé publique de signature<br>PK_sig Ed25519]:::pub
-    PK_sig_local[Clé publique de signature<br>PK_sig Ed25519]:::pub
-    SK_master[Clé maître de groupe<br>SK_master X25519]:::priv
-    SK_admin[Clé ECIES partagée<br>SK_admin ]:::priv
-    PK_admin[Clé publique ECIES<br>PK_admin]:::pub
-    authority_id[Authority ID  <br>ex: 0x012345...]:::meta
-    pub_registry[Table des autorités<br>authority_id → PK_sig]:::tab     
-    pub_table[Table embarquée<br>authority_id → PK_sig]:::pub
-    SK_admin_local[SK_admin stockée localement<br> volume  chiffré]:::priv
+.. mermaid::
 
+   flowchart TB
 
-    %% Phase 1 : Génération des clés côté émetteur
-    subgraph Client["Construction (App mobile / CLI)"]
-        direction TB
-        SK_sig -->|génère| PK_sig
-        authority_id  -->|indexée dans| pub_registry
-        PK_sig -->|indexée dans| pub_registry
+       SK_sig[Clé privée de signature<br>SK_sig Ed25519]:::priv
+       PK_sig[Clé publique de signature<br>PK_sig Ed25519]:::pub
+       PK_sig_local[Clé publique de signature<br>PK_sig Ed25519]:::pub
+       SK_master[Clé maître de groupe<br>SK_master X25519]:::priv
+       SK_admin[Clé ECIES partagée<br>SK_admin ]:::priv
+       PK_admin[Clé publique ECIES<br>PK_admin]:::pub
+       authority_id[Authority ID  <br>ex: 0x012345...]:::meta
+       pub_registry[Table des autorités<br>authority_id → PK_sig]:::tab
+       pub_table[Table embarquée<br>authority_id → PK_sig]:::pub
+       SK_admin_local[SK_admin stockée localement<br> volume  chiffré]:::priv
 
-        SK_master -->|dérive| SK_admin
-        SK_admin -->|génère| PK_admin
-    end
+       %% Phase 1 : Génération des clés côté émetteur
+       subgraph Client["Construction (App mobile / CLI)"]
+           direction TB
+           SK_sig -->|génère| PK_sig
+           authority_id  -->|indexée dans| pub_registry
+           PK_sig -->|indexée dans| pub_registry
 
-    %% Phase 2 : Configuration initiale du lecteur
-    subgraph Lecteur["Interprétation (Lecteur Balabewi)"]
-        direction TB
-        pub_registry -->|copiée| pub_table
-        SK_admin -->|copiée vers lecteur| SK_admin_local
-    end
+           SK_master -->|dérive| SK_admin
+           SK_admin -->|génère| PK_admin
+       end
 
+       %% Phase 2 : Configuration initiale du lecteur
+       subgraph Lecteur["Interprétation (Lecteur Balabewi)"]
+           direction TB
+           pub_registry -->|copiée| pub_table
+           SK_admin -->|copiée vers lecteur| SK_admin_local
+       end
 
-    %% Construction de la capsule
-    subgraph Client["Construction (App mobile / CLI)"]
-        direction TB
-        SK_sig -->|signe F2 : SHA256 des TLV| capsule_f3[Signature]
-        authority_id -->|copié dans capsule| capsule_f4[Authority ID]
-        PK_admin -->|chiffre payload JSON| capsule_e1[Payload chiffré]
-    end
+       %% Construction de la capsule
+       subgraph Client["Construction (App mobile / CLI)"]
+           direction TB
+           SK_sig -->|signe F2 : SHA256 des TLV| capsule_f3[Signature]
+           authority_id -->|copié dans capsule| capsule_f4[Authority ID]
+           PK_admin -->|chiffre payload JSON| capsule_e1[Payload chiffré]
+       end
 
-    %% Capsule
-    subgraph Capsule["Capsule CIF"]
-        capsule_f3 --> 0xF3
-        capsule_f4 --> 0xF4
-        capsule_e1 --> 0xF1
-    end
+       %% Capsule
+       subgraph Capsule["Capsule CIF"]
+           capsule_f3 --> 0xF3
+           capsule_f4 --> 0xF4
+           capsule_e1 --> 0xF1
+       end
 
-    %% Utilisation côté lecteur
-    subgraph Lecteur["Interprétation (Lecteur Balabewi)"]
-        direction TB
+       %% Utilisation côté lecteur
+       subgraph Lecteur["Interprétation (Lecteur Balabewi)"]
+           direction TB
 
-        0xF4 -->|lookup - authority_id| pub_table
-        0xF3 -->|verify - signature| PK_sig_local
-        0xF1 -->|decrypt - payload| SK_admin_local
-        pub_table --> |extarct| PK_sig_local
-        PK_sig_local --> |valide|cap[IOBEWI Capsule]
-        SK_admin_local --> |Déchiffre| Payload
-
-    end
-```
+           0xF4 -->|lookup - authority_id| pub_table
+           0xF3 -->|verify - signature| PK_sig_local
+           0xF1 -->|decrypt - payload| SK_admin_local
+           pub_table --> |extarct| PK_sig_local
+           PK_sig_local --> |valide|cap[IOBEWI Capsule]
+           SK_admin_local --> |Déchiffre| Payload
+       end
