@@ -1,5 +1,6 @@
 sphinx
 sphinx_rtd_theme
+sphinxcontrib-mermaid
 myst-parser
 cryptography
 pytest>=7.0

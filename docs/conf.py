@@ -15,6 +15,7 @@ author = 'IOBEWI'
 release = '1.0'
 
 extensions = [
+    "sphinxcontrib.mermaid",
     'sphinx_rtd_theme'
 ]
 
