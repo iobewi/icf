@@ -1,6 +1,5 @@
-=====================
-ICF Tag Registry (v1)
-=====================
+ICF Tag Registry
+================
 
 Ce registre répertorie les tags TLV définis dans la version 1 de la spécification ICF.
 
