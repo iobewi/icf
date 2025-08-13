@@ -8,12 +8,6 @@ IOBEWI Capsule Format (ICF)
    Cette documentation couvre **la spécification ICF**, les **outils associés**,
    ainsi que son **implémentation ESP-IDF** et les guides pour contribuer.
 
-========================  ==============================  =====================
-|Get Started|_            |ICF Specification|_            |Tools & Testing|_
-------------------------  ------------------------------  ---------------------
-`Get Started`_           `ICF Specification`_            `Tools & Testing`_
-========================  ==============================  =====================
-
 .. |Get Started| image:: _static/1F680.svg
    :width: 200px
    :alt: Get Started
@@ -29,11 +23,11 @@ IOBEWI Capsule Format (ICF)
    :alt: Tools & Testing
 .. _Tools & Testing: tools/index.html
 
-====================  =========================  =========================
-|Lib ESP-IDF|_        |Contribute|_              |Resources & About|_
---------------------  --------------------------  ------------------------
-`Lib ESP-IDF`_        `Contribute`_              `Resources & About`_
-====================  =========================  =========================
+========================  ==============================  =====================
+|Get Started|_            |ICF Specification|_            |Tools & Testing|_
+------------------------  ------------------------------  ---------------------
+`Get Started`_           `ICF Specification`_            `Tools & Testing`_
+========================  ==============================  =====================
 
 .. |Lib ESP-IDF| image:: _static/E1C1.svg
    :width: 200px
@@ -49,6 +43,12 @@ IOBEWI Capsule Format (ICF)
    :width: 200px
    :alt: Resources & About
 .. _Resources & About: resources/index.html
+
+====================  =========================  =========================
+|Lib ESP-IDF|_        |Contribute|_              |Resources & About|_
+--------------------  --------------------------  ------------------------
+`Lib ESP-IDF`_        `Contribute`_              `Resources & About`_
+====================  =========================  =========================
 
 .. toctree::
    :hidden:
