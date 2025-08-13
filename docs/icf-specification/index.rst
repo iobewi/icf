@@ -4,8 +4,9 @@ Spécification ICF
 
 Le **IOBEWI Capsule Format (ICF)** est un format TLV ouvert conçu pour encoder de manière sécurisée des métadonnées et liens vers des ressources numériques sur puces RFID, dans le cadre du projet open source Balabewi.
 
+********
 Objectif
-========
+********
 
 Définir un format TLV, appelé IOBEWI Capsule Format (ICF), pérenne, compact et sécurisé, pour encoder des informations sur une puce RFID (NTAG215, 504 octets utiles), utilisée dans les lecteurs audio Balabewi.
 
