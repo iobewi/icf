@@ -1,0 +1,1266 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spécification ICF &mdash; ICF Specification Guide 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=c33b16f2" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Outils" href="../tools/index.html" />
+    <link rel="prev" title="FAQ" href="../get-started/faq.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/iobewi.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../get-started/index.html">Get Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Spécification ICF</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#objectif">Objectif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tlv">TLV</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#format-tlv-general">Format TLV général</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#structure-generique">Structure générique</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#conventions-de-codage">Conventions de codage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#icf-tag-registry">ICF Tag Registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#detail-des-champs-tlv">Détail des champs TLV</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#x01-url-du-contenu"><cite>0x01</cite> – URL du contenu</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#x02-langue"><cite>0x02</cite> –  Langue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#x03-titre"><cite>0x03</cite> – Titre</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#x04-tag-pedagogique"><cite>0x04</cite> – Tag pédagogique</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#x05-duree-de-retention"><cite>0x05</cite> – Durée de rétention</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#x06-expiration-absolue"><cite>0x06</cite> – Expiration absolue</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xe0-type-de-badge"><cite>0xE0</cite> – Type de badge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xe1-donnees-systeme-payloads-structures"><cite>0xE1</cite> – Données système (Payloads structurés)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xf3-signature-cryptographique"><cite>0xF3</cite> – Signature cryptographique</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xf4-authority-id"><cite>0xF4</cite> – Authority ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#xff-marqueur-de-fin"><cite>0xFF</cite> – Marqueur de fin</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#espace-utilise">Espace utilisé</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#capsule-de-ressource-badge-type-0x00">Capsule de ressource (<cite>badge_type: 0x00</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#capsule-de-configuration-badge-type-0x01">Capsule de configuration (<cite>badge_type: 0x01</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#capsule-de-ressource-avec-configuratioon-badge-type-0x00-0xe1">Capsule de ressource avec configuratioon (<cite>badge_type: 0x00 + 0xE1</cite>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#capsule-dadministration-badge-type-0x02">Capsule d’administration (<cite>badge_type: 0x02</cite>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#modele">Modèle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#profils-icf">Profils ICF</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#icf-full-recommande-ntag215-216">ICF-Full (recommandé NTAG215/216)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#icf-lite-ntag213">ICF-Lite (NTAG213)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#icf-sur-ndef">ICF sur NDEF</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#securite">Sécurité</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#types-de-badges-et-securite">Types de badges et sécurité</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fonctionnement-de-la-signature-ed25519">Fonctionnement de la signature (Ed25519)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#securite-cryptographique-et-gestion-des-cles">Sécurité cryptographique et gestion des clés</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#solution-retenue-cle-partagee-entre-lecteurs-sk-admin">Solution retenue — Clé partagée entre lecteurs (<cite>SK_admin</cite>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#interoperabilite">Interopérabilité</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#profils-de-lecteurs">Profils de lecteurs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#profils">Profils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#matrice-de-conformite">Matrice de conformité</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#politiques-de-lecture">Politiques de lecture</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#modes-de-lecture">Modes de lecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mecanisme-de-verification-lecteur">Mécanisme de vérification (lecteur)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#exemples">Exemples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#exemples-de-badges-format-json-illustratif">Exemples de badges (format JSON illustratif)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/index.html">Outils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib-esp-idf/index.html">Lib ESP-IDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contribuer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">Ressources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/index.html">À propos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ICF Specification Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Spécification ICF</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/icf-specification/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="specification-icf">
+<h1>Spécification ICF<a class="headerlink" href="#specification-icf" title="Link to this heading"></a></h1>
+<p>Le <strong>IOBEWI Capsule Format (ICF)</strong> est un format TLV ouvert conçu pour encoder de manière sécurisée des métadonnées et liens vers des ressources numériques sur puces RFID, dans le cadre du projet open source Balabewi.</p>
+<section id="objectif">
+<h2>Objectif<a class="headerlink" href="#objectif" title="Link to this heading"></a></h2>
+<p>Définir un format TLV, appelé IOBEWI Capsule Format (ICF), pérenne, compact et sécurisé, pour encoder des informations sur une puce RFID (NTAG215, 504 octets utiles), utilisée dans les lecteurs audio Balabewi.</p>
+<p>Ce format vise à :</p>
+<ul class="simple">
+<li><p>garantir la <strong>simplicité d’usage</strong> sur une interface sans écran,</p></li>
+<li><p>permettre une <strong>vérification cryptographique</strong> de la source du contenu,</p></li>
+<li><p>s’adapter au <strong>contexte scolaire ou familial</strong>, en mode bridé ou ouvert,</p></li>
+<li><p>intégrer dès le départ <strong>tous les mécanismes utiles</strong> à la gouvernance, la sécurité et la pérennité des contenus.</p></li>
+</ul>
+</section>
+<section id="tlv">
+<h2>TLV<a class="headerlink" href="#tlv" title="Link to this heading"></a></h2>
+<section id="format-tlv-general">
+<h3>Format TLV général<a class="headerlink" href="#format-tlv-general" title="Link to this heading"></a></h3>
+<p>Chaque capsule ICF est composée d’une suite de champs <strong>TLV</strong> (<em>Type – Length – Value</em>).</p>
+<section id="structure-generique">
+<h4>Structure générique<a class="headerlink" href="#structure-generique" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19.0%" />
+<col style="width: 19.0%" />
+<col style="width: 61.9%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Champ</p></th>
+<th class="head"><p>Taille</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Type</span></code></p></td>
+<td><p>1 octet</p></td>
+<td><p>Identifiant du champ</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Length</span></code></p></td>
+<td><p>1 octet</p></td>
+<td><p>Taille du champ <code class="docutils literal notranslate"><span class="pre">Value</span></code> en octets</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Value</span></code></p></td>
+<td><p>N octets</p></td>
+<td><p>Donnée encodée</p></td>
+</tr>
+</tbody>
+</table>
+<p>Les TLV sont chaînés les uns à la suite.
+L’ordre est libre, <strong>sauf pour la signature (`0xF3`) qui doit clore la séquence</strong>.</p>
+</section>
+<section id="conventions-de-codage">
+<h4>Conventions de codage<a class="headerlink" href="#conventions-de-codage" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Endianness</strong> : tous les entiers multi-octets (timestamps, identifiants) sont en <strong>big-endian</strong>.</p></li>
+<li><p><strong>Texte</strong> : chaînes UTF-8 <strong>sans BOM</strong>, longueur maximale strictement indiquée par <cite>Length</cite>. Aucun encodage alternatif (UTF-16, etc.) n’est autorisé.</p></li>
+<li><p><strong>Tolérance</strong> :
+* Mode libre → un lecteur <strong>peut</strong> ignorer les champs inconnus (<cite>Type ∉ [0x01–0xF4]</cite>).
+* Mode bridé → un lecteur <strong>doit</strong> rejeter toute capsule contenant un champ non conforme ou invalide.</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>En lecture, le parseur TLV <strong>doit</strong> parcourir la capsule séquentiellement et valider chaque champ avant de passer au suivant.
+La présence du champ <cite>0xFF</cite> n’est pas obligatoire, mais s’il est présent, il marque explicitement la fin.</p>
+</div>
+</section>
+</section>
+<section id="icf-tag-registry">
+<h3>ICF Tag Registry<a class="headerlink" href="#icf-tag-registry" title="Link to this heading"></a></h3>
+<p>Ce registre répertorie les tags TLV définis dans la version 1 de la spécification ICF.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 55.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type (hex)</p></th>
+<th class="head"><p>Nom</p></th>
+<th class="head"><p>Taille max</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x01</span></code></p></td>
+<td><p>URL</p></td>
+<td><p>200 o</p></td>
+<td><p>Lien HTTP(S) complet vers une ressource numérique</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x02</span></code></p></td>
+<td><p>Langue</p></td>
+<td><p>2 o</p></td>
+<td><p>Code langue ISO 639-1 (<code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>…)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x03</span></code></p></td>
+<td><p>Titre</p></td>
+<td><p>64 o</p></td>
+<td><p>Titre optionnel du média (UTF-8)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x04</span></code></p></td>
+<td><p>Tag pédagogique</p></td>
+<td><p>3 o</p></td>
+<td><p>Octet 1 : cycle, Octet 2 : matière, Octet 3 : sous-classe</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x05</span></code></p></td>
+<td><p>Rétention</p></td>
+<td><p>1 o</p></td>
+<td><p>Durée de conservation locale (jours, 0 = non stocké)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x06</span></code></p></td>
+<td><p>Expiration</p></td>
+<td><p>4 o</p></td>
+<td><p>Timestamp d’expiration absolue (UNIX, big-endian)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0xE0</span></code></p></td>
+<td><p>Type badge</p></td>
+<td><p>1 o</p></td>
+<td><p>0=ressource, 1=configuration, 2=administration</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0xE1-0xEF</span></code></p></td>
+<td><p>Payload sys.</p></td>
+<td><p>variable</p></td>
+<td><p>Données de config ou commandes admin (JSON)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0xF2</span></code></p></td>
+<td><p>Hash</p></td>
+<td><p>32 o</p></td>
+<td><p>SHA256 calculé sur les TLV précédents</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0xF3</span></code></p></td>
+<td><p>Signature</p></td>
+<td><p>64 o</p></td>
+<td><p>Signature du hash par autorité (Ed25519)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0xF4</span></code></p></td>
+<td><p>AuthorityID</p></td>
+<td><p>8 o</p></td>
+<td><p>Identifiant de l’autorité ayant signé le contenu</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0xFF</span></code></p></td>
+<td><p>Fin</p></td>
+<td><p>0 o</p></td>
+<td><p>(optionnel) marqueur de fin de capsule</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detail-des-champs-tlv">
+<h3>Détail des champs TLV<a class="headerlink" href="#detail-des-champs-tlv" title="Link to this heading"></a></h3>
+<p>Chaque champ TLV défini dans l’ICF v1 est décrit ci-dessous de manière précise, avec son rôle, sa structure, et ses cas d’usage.</p>
+<section id="x01-url-du-contenu">
+<h4><cite>0x01</cite> – URL du contenu<a class="headerlink" href="#x01-url-du-contenu" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille maximale</strong> : 200 octets (UTF-8 sans BOM)</p></li>
+<li><p><strong>Type de données</strong> : chaîne de caractères ASCII ou UTF-8</p></li>
+<li><p><strong>Contenu</strong> : Lien HTTP(S) complet pointant vers une ressource numérique (ex. fichier audio, vidéo, page web…)</p></li>
+<li><p><strong>Exemple</strong> : <cite>https://balabewi.org/audio123.mp3</cite></p></li>
+<li><p><strong>Obligatoire</strong> : Oui</p></li>
+</ul>
+<p>&gt; Le lien doit être accessible publiquement, sans authentification, et stable dans le temps.</p>
+</section>
+<section id="x02-langue">
+<h4><cite>0x02</cite> –  Langue<a class="headerlink" href="#x02-langue" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille maximale</strong> : 2 octets</p></li>
+<li><p><strong>Type de données</strong> : ISO 639-1</p></li>
+<li><p><strong>Contenu</strong> : Code à deux lettres représentant la langue principale du contenu numerique</p></li>
+<li><p><strong>Obligatoire</strong> : Non, mais recommandé</p></li>
+<li><p><strong>Utilité</strong> :
+* Filtrage de contenu par langue dans une interface multilingue
+* Limitation géographique ou pédagogique selon la langue cible</p></li>
+</ul>
+</section>
+<section id="x03-titre">
+<h4><cite>0x03</cite> – Titre<a class="headerlink" href="#x03-titre" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille maximale</strong> : 64 octets</p></li>
+<li><p><strong>Type de données</strong> : UTF-8</p></li>
+<li><p><strong>Contenu</strong> : Titre lisible du média (ex. : <em>Histoires de pirates</em>)</p></li>
+<li><p><strong>Obligatoire</strong> : Non, mais recommandé</p></li>
+<li><p><strong>Utilité</strong> : Affichage dans une interface de supervision ou app mobile, classement, export</p></li>
+</ul>
+</section>
+<section id="x04-tag-pedagogique">
+<h4><cite>0x04</cite> – Tag pédagogique<a class="headerlink" href="#x04-tag-pedagogique" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille</strong> : 3 octets</p></li>
+<li><p><strong>Structure</strong> :</p>
+<ul>
+<li><p>Octet 1 → <strong>Cycle scolaire</strong></p></li>
+<li><p>Octet 2 → <strong>Matière ou thème</strong></p></li>
+<li><p>Octet 3 → <strong>Sous-classe libre</strong></p></li>
+</ul>
+</li>
+<li><p><strong>Obligatoire</strong> : Non, mais recommandé</p></li>
+<li><p><strong>Utilité</strong> : Filtrage, gouvernance pédagogique, intégration dans un ENT ou interface métier</p></li>
+</ul>
+<section id="tableau-des-cycles-octet-1">
+<h5>Tableau des cycles (octet 1)<a class="headerlink" href="#tableau-des-cycles-octet-1" title="Link to this heading"></a></h5>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Valeur (hex)</p></th>
+<th class="head"><p>Cycle scolaire</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x00</span></code></p></td>
+<td><p>Non défini</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x01</span></code></p></td>
+<td><p>Cycle 1 (maternelle)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x02</span></code></p></td>
+<td><p>Cycle 2 (CP-CE1-CE2)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0x03</span></code></p></td>
+<td><p>Cycle 3 (CM1-CM2-6e)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0x04</span></code></p></td>
+<td><p>Cycle 4 (5e-4e-3e)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">0xFE</span></code></p></td>
+<td><p>Réservé usage local</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0xFF</span></code></p></td>
+<td><p>Réservé usage futur</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tableau-des-matieres-octet-2">
+<h5>Tableau des matières (octet 2)<a class="headerlink" href="#tableau-des-matieres-octet-2" title="Link to this heading"></a></h5>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Valeur (hex)</p></th>
+<th class="head"><p>Matière / thème</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>0x00</cite></p></td>
+<td><p>Non défini</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0x01</cite></p></td>
+<td><p>Lecture / histoire</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0x02</cite></p></td>
+<td><p>Sciences / nature</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0x03</cite></p></td>
+<td><p>Musique / chant</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0x04</cite></p></td>
+<td><p>Langue étrangère</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0x05</cite></p></td>
+<td><p>Projet personnalisé</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0x06</cite></p></td>
+<td><p>Mathématiques</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0x07</cite></p></td>
+<td><p>Éducation civique</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0xFE</cite></p></td>
+<td><p>Réservé usage local</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0xFF</cite></p></td>
+<td><p>Réservé usage futur</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sous-classe-libre-octet-3">
+<h5>Sous-classe libre (octet 3)<a class="headerlink" href="#sous-classe-libre-octet-3" title="Link to this heading"></a></h5>
+<ul class="simple">
+<li><p>Utilisation libre par l’émetteur de la capsule (enseignant, app mobile…)</p></li>
+<li><p>Peut désigner :
+* un niveau précis (ex. : CE1 → 0x11)
+* un groupe classe (ex. : ULIS → 0x3A)
+* une série pédagogique (ex. : série “Écoute active” → 0x80)</p></li>
+<li><p>Valeurs non normalisées à ce jour
+* Si non utilisé : <cite>0x00</cite></p></li>
+</ul>
+</section>
+</section>
+<section id="x05-duree-de-retention">
+<h4><cite>0x05</cite> – Durée de rétention<a class="headerlink" href="#x05-duree-de-retention" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille</strong> : 1 octet</p></li>
+<li><p><strong>Type de données</strong> : entier non signé (uint8)</p></li>
+<li><p><strong>Contenu</strong> : Nombre de jours pendant lesquels le média est conservé localement</p></li>
+<li><p><strong>Valeurs possibles</strong> :</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Valeur</p></th>
+<th class="head"><p>Signification</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>0x00</cite></p></td>
+<td><p>Pas de stockage local</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0x01</cite> – <cite>0xFF</cite></p></td>
+<td><p>Stockage entre 1 et 255 jours</p></td>
+</tr>
+</tbody>
+</table>
+<p>&gt; Permet de contrôler la place mémoire et l’actualisation automatique du contenu.</p>
+</section>
+<section id="x06-expiration-absolue">
+<h4><cite>0x06</cite> – Expiration absolue<a class="headerlink" href="#x06-expiration-absolue" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille</strong> : 4 octets</p></li>
+<li><p><strong>Type de données</strong> : Timestamp UNIX (uint32 big-endian)</p></li>
+<li><p><strong>Contenu</strong> : Date et heure au-delà de laquelle la capsule n’est plus valable</p></li>
+<li><p><strong>Obligatoire</strong> : Non, mais conseillé dans un cadre scolaire ou temporaire</p></li>
+<li><p><strong>Exemple</strong> : <cite>0x66 87 3C A0</cite> → <cite>2025-12-31T23:59:59Z</cite></p></li>
+</ul>
+<p>&gt; Nécessite une horloge interne (RTC) ou une synchronisation réseau (NTP) sur le lecteur.</p>
+</section>
+<section id="xe0-type-de-badge">
+<h4><cite>0xE0</cite> – Type de badge<a class="headerlink" href="#xe0-type-de-badge" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille</strong> : 1 octet</p></li>
+<li><p><strong>Valeurs possibles</strong> :</p>
+<ul>
+<li><p><cite>0x00</cite> → Badge ressource <em>(lecture de contenu numérique)</em></p></li>
+<li><p><cite>0x01</cite> → Badge configuration <em>(paramètres simples non critiques)</em></p></li>
+<li><p><cite>0x02</cite> → Badge administration <em>(opérations critiques ou sensibles)</em></p></li>
+</ul>
+</li>
+<li><p><strong>Obligatoire</strong> : Non — en son absence, le badge est interprété comme une ressource (<cite>0x00</cite> par défaut)</p></li>
+</ul>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Valeur</p></th>
+<th class="head"><p>Signature requise</p></th>
+<th class="head"><p>Chiffrement requis</p></th>
+<th class="head"><p>Persistant</p></th>
+<th class="head"><p>Interprétation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ressource</p></td>
+<td><p>0x00</p></td>
+<td><p>Optionnelle (requise si mode bridé)</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+<td><p>Contenu à lire (audio, vidéo, doc…)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Configuration</p></td>
+<td><p>0x01</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+<td><p>Paramétrage simple d’un appareil</p></td>
+</tr>
+<tr class="row-even"><td><p>Administration</p></td>
+<td><p>0x02</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui (ECIES)</p></td>
+<td><p>Oui</p></td>
+<td><p>Configuration critique / commandes sensibles</p></td>
+</tr>
+</tbody>
+</table>
+<p>&gt; Les badges de configuration sont interprétés au moment de la lecture et n’ont pas besoin d’être persistés.
+&gt; Les badges d’administration peuvent modifier de façon persistante la configuration du lecteur (ex: clés Wi-Fi, endpoints, règles de sécurité…).</p>
+</section>
+<section id="xe1-donnees-systeme-payloads-structures">
+<h4><cite>0xE1</cite> – Données système (Payloads structurés)<a class="headerlink" href="#xe1-donnees-systeme-payloads-structures" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille</strong> : variable</p></li>
+<li><p><strong>Contenu</strong> : Charge utile structurée (ex. paramètres de configuration ou commandes internes)</p></li>
+<li><p><strong>Persistance</strong> : dépend du type de badge (voir tableau ci-dessus)</p></li>
+<li><p><strong>Encodage recommandé</strong> : la <cite>Value</cite> contient <strong>exclusivement une structure JSON valide</strong>. Toute autre forme d’encodage (binaire, CBOR, texte libre) est interdite.</p></li>
+</ul>
+<section id="badge-de-ressource-avec-configuration-badge-type-0x00-0xe1">
+<h5>Badge de ressource avec configuration (<cite>badge_type: 0x00</cite> + <cite>0xE1</cite>)<a class="headerlink" href="#badge-de-ressource-avec-configuration-badge-type-0x00-0xe1" title="Link to this heading"></a></h5>
+<p>Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de type ressource peut inclure un champ <cite>0xE1</cite> contenant des <strong>paramètres de lecture temporaires</strong>, au format <strong>JSON clair</strong>.</p>
+<ul class="simple">
+<li><p>Ce champ est optionnel.</p></li>
+<li><p>Les paramètres sont <strong>appliqués uniquement pendant la lecture</strong> et ne modifient <strong>pas la configuration durable</strong> de l’appareil.</p></li>
+<li><p>Les lecteurs peuvent choisir d’ignorer ces options si la politique locale de sécurité l’exige.</p></li>
+</ul>
+</section>
+<section id="badge-de-configuration-badge-type-0x01">
+<h5>Badge de configuration (<cite>badge_type: 0x01</cite>)<a class="headerlink" href="#badge-de-configuration-badge-type-0x01" title="Link to this heading"></a></h5>
+<ul class="simple">
+<li><p>Le champ <cite>0xE1</cite> contient des données <strong>en clair</strong>, directement interprétables par le lecteur.</p></li>
+<li><p>Ces données encodent des paramètres simples : volume, mise en veille, ambiance lumineuse, etc.</p></li>
+<li><p>La structure exacte doit être connue du firmware pour que la configuration soit appliquée correctement.</p></li>
+</ul>
+<p>&gt; Un seul TLV <cite>0xE1</cite> est attendu par badge. Si plusieurs sont présents, seul le premier peut être pris en compte.</p>
+</section>
+<section id="badge-dadministration-badge-type-0x02">
+<h5>Badge d’administration (<cite>badge_type: 0x02</cite>)<a class="headerlink" href="#badge-dadministration-badge-type-0x02" title="Link to this heading"></a></h5>
+<ul class="simple">
+<li><p>Le champ <cite>0xE1</cite> d’un badge de type <cite>0x02</cite> contient une <strong>donnée chiffrée</strong>, représentant une commande ou un paramètre critique destiné à être appliqué de manière persistante sur un ou plusieurs appareils.</p></li>
+<li><p>Il est <strong>systématiquement chiffré</strong> via <strong>ECIES/X25519</strong>, à l’aide de la <strong>clé publique dérivée de `SK_admin`</strong>, une clé privée partagée et installée localement sur un groupe d’appareils appairés.</p></li>
+<li><p>Ce mécanisme permet de <strong>chiffrer la donnée une seule fois</strong>, tout en la rendant <strong>déchiffrable par tous les appareils</strong> du groupe.</p></li>
+</ul>
+<p>&gt; Ce modèle est sécurisé tant que :
+&gt;
+&gt; * la donnée est considérée comme <strong>commune au groupe</strong>,
+&gt; * la clé privée <cite>SK_admin</cite> est <strong>protégée localement</strong> (par exemple via chiffrement de la flash),
+&gt; * la capsule est <strong>signée par une autorité de confiance</strong>.</p>
+<ul class="simple">
+<li><p>Le contenu du champ <cite>0xE1</cite> est une <strong>structure JSON sérialisée</strong>, chiffrée via ECIES, puis <strong>encodée en base64</strong>.</p></li>
+<li><p>La <strong>signature Ed25519</strong> (champ <cite>0xF3</cite>) atteste que le badge provient d’un émetteur autorisé, identifié via le champ <cite>0xF4</cite> (<cite>authority_id</cite>).</p></li>
+</ul>
+</section>
+</section>
+<section id="xf3-signature-cryptographique">
+<h4><cite>0xF3</cite> – Signature cryptographique<a class="headerlink" href="#xf3-signature-cryptographique" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille</strong> : 64 octets</p></li>
+<li><p><strong>Algorithme</strong> : Ed25519</p></li>
+<li><p><strong>Contenu</strong> : Signature de <cite>0xF2</cite> à l’aide d’une clé privée locale</p></li>
+<li><p><strong>Généré par</strong> : l’application officielle ou un outil CLI sécurisé</p></li>
+</ul>
+<p>&gt; Signé à partir du hash SHA256 (champ <cite>0xF2</cite>)
+&gt; Doit être présent <strong>avec</strong> un champ <cite>0xF4</cite> pour être exploitable par un lecteur sécurisé</p>
+</section>
+<section id="xf4-authority-id">
+<h4><cite>0xF4</cite> – Authority ID<a class="headerlink" href="#xf4-authority-id" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille</strong> : 8 octets</p></li>
+<li><p><strong>Type</strong> : identifiant unique d’autorité (uint64 ou chaîne fixe)</p></li>
+<li><p><strong>Contenu</strong> : Permet au lecteur de savoir quelle clé publique utiliser pour vérifier la signature</p></li>
+<li><p><strong>Exemple</strong> : <cite>01 23 45 67 89 AB CD EF</cite></p></li>
+</ul>
+<p>&gt; Le champ <cite>AuthorityID</cite> est essentiel si plusieurs autorités de confiance doivent coexister sur un même appareil.
+&gt; Il permet au lecteur de savoir <strong>quelle clé publique utiliser</strong> pour vérifier la signature.
+&gt; Chaque autorité locale (par exemple : école, structure, éditeur) peut disposer de sa propre paire de clés.</p>
+</section>
+<section id="xff-marqueur-de-fin">
+<h4><cite>0xFF</cite> – Marqueur de fin<a class="headerlink" href="#xff-marqueur-de-fin" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Taille</strong> : 0 octet</p></li>
+<li><p><strong>Utilité</strong> : Optionnelle — peut marquer explicitement la fin d’une capsule</p></li>
+<li><p><strong>Interprétation</strong> : Indique qu’aucun champ ne suit</p></li>
+</ul>
+</section>
+</section>
+<section id="espace-utilise">
+<h3>Espace utilisé<a class="headerlink" href="#espace-utilise" title="Link to this heading"></a></h3>
+<section id="capsule-de-ressource-badge-type-0x00">
+<h4>Capsule de ressource (<cite>badge_type: 0x00</cite>)<a class="headerlink" href="#capsule-de-ressource-badge-type-0x00" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Champ</p></th>
+<th class="head"><p>Taille typique</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>0x01</cite> URL</p></td>
+<td><p>-120 à 200 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0x02</cite> Langue</p></td>
+<td><p>2 octets</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0x03</cite> Titre</p></td>
+<td><p>-32 à 64 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0x04</cite> Tag péd.</p></td>
+<td><p>3 octets</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0x05</cite> Rétention</p></td>
+<td><p>1 octet</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0x06</cite> Expiration</p></td>
+<td><p>4 octets</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0xF2</cite> Hash</p></td>
+<td><p>32 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0xF3</cite> Signature</p></td>
+<td><p>64 octets</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0xF4</cite> AuthorityID</p></td>
+<td><p>8 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0xFF</cite> Fin</p></td>
+<td><p>0 à 2 octets</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Total</strong></p></td>
+<td><p><strong>-330 à 430 o</strong></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="capsule-de-configuration-badge-type-0x01">
+<h4>Capsule de configuration (<cite>badge_type: 0x01</cite>)<a class="headerlink" href="#capsule-de-configuration-badge-type-0x01" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Champ</p></th>
+<th class="head"><p>Taille typique</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>0xE0</cite> Type</p></td>
+<td><p>1 octet</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0xE1</cite> Payload JSON</p></td>
+<td><p>-30 à 150 o</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0xFF</cite> Fin</p></td>
+<td><p>0 à 2 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Total</strong></p></td>
+<td><p><strong>-40 à 160 o</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>&gt; Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)</p>
+</section>
+<section id="capsule-de-ressource-avec-configuratioon-badge-type-0x00-0xe1">
+<h4>Capsule de ressource avec configuratioon (<cite>badge_type: 0x00 + 0xE1</cite>)<a class="headerlink" href="#capsule-de-ressource-avec-configuratioon-badge-type-0x00-0xe1" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Champ</p></th>
+<th class="head"><p>Taille typique</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>URL (<cite>0x01</cite>)</p></td>
+<td><p>-120 à 200 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p>Langue (<cite>0x02</cite>)</p></td>
+<td><p>2 octets</p></td>
+</tr>
+<tr class="row-even"><td><p>Titre (<cite>0x03</cite>)</p></td>
+<td><p>-32 à 64 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tag pédagogique (<cite>0x04</cite>)</p></td>
+<td><p>3 octets</p></td>
+</tr>
+<tr class="row-even"><td><p>Rétention (<cite>0x05</cite>)</p></td>
+<td><p>1 octet</p></td>
+</tr>
+<tr class="row-odd"><td><p>Expiration (<cite>0x06</cite>)</p></td>
+<td><p>4 octets</p></td>
+</tr>
+<tr class="row-even"><td><p>Payload config JSON (<cite>0xE1</cite>)</p></td>
+<td><p>-50 à 100 o</p></td>
+</tr>
+<tr class="row-odd"><td><p>Hash (<cite>0xF2</cite>)</p></td>
+<td><p>32 octets</p></td>
+</tr>
+<tr class="row-even"><td><p>Signature (<cite>0xF3</cite>)</p></td>
+<td><p>64 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p>Authority ID (<cite>0xF4</cite>)</p></td>
+<td><p>8 octets</p></td>
+</tr>
+<tr class="row-even"><td><p>Fin (<cite>0xFF</cite>)</p></td>
+<td><p>0 à 2 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Total</strong></p></td>
+<td><p><strong>-370 à 480 octets</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>&gt; Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)</p>
+</section>
+<section id="capsule-dadministration-badge-type-0x02">
+<h4>Capsule d’administration (<cite>badge_type: 0x02</cite>)<a class="headerlink" href="#capsule-dadministration-badge-type-0x02" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Champ</p></th>
+<th class="head"><p>Taille typique</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>0xE0</cite> Type</p></td>
+<td><p>1 octet</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0xE1</cite> Payload chiffré</p></td>
+<td><p>-64 à 128 o</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0xF2</cite> Hash</p></td>
+<td><p>32 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0xF3</cite> Signature</p></td>
+<td><p>64 octets</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>0xF4</cite> AuthorityID</p></td>
+<td><p>8 octets</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>0xFF</cite> Fin</p></td>
+<td><p>0 à 2 octets</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Total</strong></p></td>
+<td><p><strong>-170 à 240 o</strong></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="modele">
+<h2>Modèle<a class="headerlink" href="#modele" title="Link to this heading"></a></h2>
+<section id="profils-icf">
+<h3>Profils ICF<a class="headerlink" href="#profils-icf" title="Link to this heading"></a></h3>
+<p>Le format ICF peut être adapté à différents types de puces NFC/RFID et à divers usages,
+en fonction des contraintes de mémoire disponible et des besoins en sécurité.
+Pour cette raison, deux profils principaux sont définis :</p>
+<ul class="simple">
+<li><p><strong>ICF-Full</strong> : conçu pour des puces à capacité étendue (ex. NTAG215/216),
+il intègre les mécanismes de sécurité complets (<cite>0xF2</cite> Hash, <cite>0xF3</cite> Signature, <cite>0xF4</cite> AuthorityID)
+et permet une richesse maximale des métadonnées.</p></li>
+<li><p><strong>ICF-Lite</strong> : optimisé pour les puces à capacité réduite (ex. NTAG213),
+il se limite aux champs essentiels, avec une sécurité optionnelle,
+pour maximiser l’espace utile.</p></li>
+</ul>
+<p>Ces profils définissent les champs obligatoires, optionnels, et l’ordre recommandé
+pour assurer une interprétation cohérente par les lecteurs compatibles.</p>
+<section id="icf-full-recommande-ntag215-216">
+<h4>ICF-Full (recommandé NTAG215/216)<a class="headerlink" href="#icf-full-recommande-ntag215-216" title="Link to this heading"></a></h4>
+<p><strong>Requis :</strong>
+- <cite>0x01</cite> URL <strong>ou</strong> <cite>0x03</cite> Titre (au moins un des deux)
+- <cite>0xF2</cite> Hash (SHA-256) calculé <strong>sur tous les TLV précédents</strong>
+- <cite>0xF3</cite> Signature Ed25519 <strong>du hash</strong> (valeur de <cite>0xF2</cite>)
+- <cite>0xF4</cite> AuthorityID (8 octets)</p>
+<p><strong>Optionnels :</strong>
+- <cite>0x02</cite> Langue (2 octets)
+- <cite>0x04</cite> Tag pédagogique (3 octets : cycle, matière, sous-classe)
+- <cite>0x05</cite> Rétention (1 octet, jours)
+- <cite>0x06</cite> Expiration (4 octets, UNIX epoch big-endian)
+- <cite>0xE0</cite> Type badge (1 octet : 0=ressource, 1=config, 2=admin)
+- <cite>0xE1–0xEF</cite> Payload système (taille variable, JSON ou binaire, usage lecteur)</p>
+<p><strong>Ordre recommandé :</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[0x01?] [0x02?] [0x03?] [0x04?] [0x05?] [0x06?]
+[0xE0?] [0xE1–0xEF?] [0xF2] [0xF3] [0xF4] [0xFF?]
+</pre></div>
+</div>
+</section>
+<section id="icf-lite-ntag213">
+<h4>ICF-Lite (NTAG213)<a class="headerlink" href="#icf-lite-ntag213" title="Link to this heading"></a></h4>
+<p>Profil optimisé pour les puces à faible capacité mémoire, lorsque la priorité
+est de maximiser l’espace utile pour le contenu plutôt que pour les métadonnées
+et les signatures.</p>
+<p><strong>Requis :</strong>
+- <cite>0x01</cite> URL <strong>ou</strong> <cite>0x03</cite> Titre</p>
+<p><strong>Optionnels :</strong>
+- <cite>0x02</cite> Langue (2 octets)
+- <cite>0x06</cite> Expiration (4 octets, UNIX epoch big-endian)
+- <cite>0x04</cite> Tag pédagogique (3 octets : cycle, matière, sous-classe)</p>
+<p><strong>Sécurité :</strong>
+- Pas d’obligation de <cite>0xF2/0xF3/0xF4</cite>.</p>
+<blockquote>
+<div><p>Le lecteur <strong>doit</strong> afficher l’état <em>Non vérifié</em> si la signature est absente.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="icf-sur-ndef">
+<h3>ICF sur NDEF<a class="headerlink" href="#icf-sur-ndef" title="Link to this heading"></a></h3>
+<p>Le format ICF peut être encapsulé dans un message <strong>NDEF</strong> (<em>NFC Data Exchange Format</em>),
+ce qui est particulièrement utile lorsque l’on souhaite que les données ICF
+soient lisibles par des applications ou systèmes NFC standards, tout en conservant
+l’intégralité de la structure TLV.</p>
+<ul class="simple">
+<li><p><strong>Record type</strong> : MIME</p></li>
+<li><p><strong>MIME type</strong> : <cite>application/vnd.icf+tlv</cite></p></li>
+<li><p><strong>Payload</strong> : octets TLV ICF complets (incluant <cite>0xF2</cite>, <cite>0xF3</cite>, <cite>0xF4</cite> si présents)</p></li>
+<li><p><strong>Message recommandé</strong> : un seul record MIME par message NDEF</p></li>
+</ul>
+<p><strong>Avantages :</strong>
+- Permet à un lecteur NFC générique de détecter qu’il s’agit de données ICF via le MIME type.
+- Compatible avec les outils de lecture/écriture NDEF existants.
+- Facilite l’intégration dans des workflows ou applications qui s’attendent à des records NDEF.</p>
+<p><strong>Limitations :</strong>
+- Les en-têtes NDEF ne sont <strong>pas signés</strong> :</p>
+<blockquote>
+<div><p>la sécurité repose uniquement sur les champs internes ICF (<cite>0xF2</cite> Hash, <cite>0xF3</cite> Signature, <cite>0xF4</cite> AuthorityID).</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>L’encapsulation NDEF ajoute un léger surcoût en octets, à prendre en compte
+sur les puces à faible capacité.</p></li>
+</ul>
+<p><strong>Remarque :</strong>
+L’encapsulation NDEF n’implique <strong>aucune réaffectation</strong> ou modification
+des tags TLV ICF. Le contenu interne reste conforme à la spécification ICF.</p>
+</section>
+</section>
+<section id="securite">
+<h2>Sécurité<a class="headerlink" href="#securite" title="Link to this heading"></a></h2>
+<section id="types-de-badges-et-securite">
+<h3>Types de badges et sécurité<a class="headerlink" href="#types-de-badges-et-securite" title="Link to this heading"></a></h3>
+<p>Le format ICF définit plusieurs types de badges, chacun répondant à des objectifs
+différents : diffusion de ressources, configuration d’un appareil ou administration.
+Chaque type applique des exigences distinctes en matière de signature, chiffrement
+et persistance.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 33.3%" />
+<col style="width: 27.8%" />
+<col style="width: 16.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Signature requise</p></th>
+<th class="head"><p>Chiffrement requis</p></th>
+<th class="head"><p>Persistant</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ressource</p></td>
+<td><p>Optionnel / Requis selon mode</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+</tr>
+<tr class="row-odd"><td><p>Configuration</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+</tr>
+<tr class="row-even"><td><p>Administration</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui (ECIES)</p></td>
+<td><p>Oui</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="fonctionnement-de-la-signature-ed25519">
+<h3>Fonctionnement de la signature (Ed25519)<a class="headerlink" href="#fonctionnement-de-la-signature-ed25519" title="Link to this heading"></a></h3>
+<p>Le mécanisme de signature garantit l’authenticité et l’intégrité de la capsule.</p>
+<ul class="simple">
+<li><p>La signature est générée <strong>par l’application mobile</strong> ou la <strong>CLI</strong>, qui détient la clé privée.</p></li>
+<li><p>Processus côté émetteur :</p>
+<ol class="arabic simple">
+<li><p>Construction des TLV à signer (<cite>0x01</cite>, <cite>0x02</cite>, <cite>0x03</cite>, <cite>0x04</cite>, <cite>0x05</cite>, <cite>0x06</cite>, etc.)</p></li>
+<li><p>Calcul du hash SHA-256 du buffer TLV</p></li>
+<li><p>Signature de ce hash avec la clé privée (Ed25519)</p></li>
+<li><p>Ajout des TLV <cite>0xF2</cite> (hash), <cite>0xF3</cite> (signature) et <cite>0xF4</cite> (AuthorityID)</p></li>
+</ol>
+</li>
+<li><p>Côté lecteur en mode bridé : seules les capsules signées par une clé publique reconnue</p></li>
+</ul>
+<p>sont acceptées, la clé étant identifiée via le champ <cite>0xF4</cite>.</p>
+</section>
+<section id="securite-cryptographique-et-gestion-des-cles">
+<h3>Sécurité cryptographique et gestion des clés<a class="headerlink" href="#securite-cryptographique-et-gestion-des-cles" title="Link to this heading"></a></h3>
+<p>Le modèle de sécurité ICF repose sur :
+- une <strong>signature Ed25519</strong> pour authentifier l’émetteur,
+- un <strong>chiffrement asymétrique ECIES/X25519</strong> pour protéger les données sensibles</p>
+<blockquote>
+<div><p>(<cite>0xE1</cite>) des badges d’administration (<cite>badge_type: 0x02</cite>).</p>
+</div></blockquote>
+<section id="solution-retenue-cle-partagee-entre-lecteurs-sk-admin">
+<h4>Solution retenue — Clé partagée entre lecteurs (<cite>SK_admin</cite>)<a class="headerlink" href="#solution-retenue-cle-partagee-entre-lecteurs-sk-admin" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Une clé privée <cite>SK_admin</cite> est générée une seule fois par l’application mobile ou la CLI.</p></li>
+<li><p>Elle est copiée localement sur chaque lecteur lors de l’appairage sécurisé.</p></li>
+<li><p>Le champ <cite>0xE1</cite> est chiffré une fois avec la clé publique dérivée de <cite>SK_admin</cite> (via X25519).</p></li>
+<li><p>Tous les lecteurs appairés peuvent déchiffrer localement la donnée.</p></li>
+<li><p>Avantages :
+- <strong>Simple</strong> : un seul chiffrement pour N lecteurs,
+- <strong>Efficace</strong> : économie d’espace sur la puce,
+- <strong>Sûr</strong> : si le firmware active le chiffrement du flash,
+- <strong>Interopérable</strong> : lisible par tous les lecteurs appairés.</p></li>
+</ul>
+<p>&gt; <strong>Remarque</strong> : la clé <cite>SK_admin</cite> n’est jamais exposée dans le badge ; seule sa clé publique est utilisée pour le chiffrement.</p>
+<pre  class="mermaid">
+        flowchart TB
+
+    SK_sig[Clé privée de signature&lt;br&gt;SK_sig Ed25519]:::priv
+    PK_sig[Clé publique de signature&lt;br&gt;PK_sig Ed25519]:::pub
+    PK_sig_local[Clé publique de signature&lt;br&gt;PK_sig Ed25519]:::pub
+    SK_master[Clé maître de groupe&lt;br&gt;SK_master X25519]:::priv
+    SK_admin[Clé ECIES partagée&lt;br&gt;SK_admin ]:::priv
+    PK_admin[Clé publique ECIES&lt;br&gt;PK_admin]:::pub
+    authority_id[Authority ID  &lt;br&gt;ex: 0x012345...]:::meta
+    pub_registry[Table des autorités&lt;br&gt;authority_id → PK_sig]:::tab
+    pub_table[Table embarquée&lt;br&gt;authority_id → PK_sig]:::pub
+    SK_admin_local[SK_admin stockée localement&lt;br&gt; volume  chiffré]:::priv
+
+
+    %% Phase 1 : Génération des clés côté émetteur
+    subgraph Client[&quot;Construction (App mobile / CLI)&quot;]
+        direction TB
+        SK_sig --&gt;|génère| PK_sig
+        authority_id  --&gt;|indexée dans| pub_registry
+        PK_sig --&gt;|indexée dans| pub_registry
+
+        SK_master --&gt;|dérive| SK_admin
+        SK_admin --&gt;|génère| PK_admin
+    end
+
+    %% Phase 2 : Configuration initiale du lecteur
+    subgraph Lecteur[&quot;Interprétation (Lecteur Balabewi)&quot;]
+        direction TB
+        pub_registry --&gt;|copiée| pub_table
+        SK_admin --&gt;|copiée vers lecteur| SK_admin_local
+    end
+
+
+    %% Construction de la capsule
+    subgraph Client[&quot;Construction (App mobile / CLI)&quot;]
+        direction TB
+        SK_sig --&gt;|signe F2 : SHA256 des TLV| capsule_f3[Signature]
+        authority_id --&gt;|copié dans capsule| capsule_f4[Authority ID]
+        PK_admin --&gt;|chiffre payload JSON| capsule_e1[Payload chiffré]
+    end
+
+    %% Capsule
+    subgraph Capsule[&quot;Capsule CIF&quot;]
+        capsule_f3 --&gt; 0xF3
+        capsule_f4 --&gt; 0xF4
+        capsule_e1 --&gt; 0xF1
+    end
+
+    %% Utilisation côté lecteur
+    subgraph Lecteur[&quot;Interprétation (Lecteur Balabewi)&quot;]
+        direction TB
+
+        0xF4 --&gt;|lookup - authority_id| pub_table
+        0xF3 --&gt;|verify - signature| PK_sig_local
+        0xF1 --&gt;|decrypt - payload| SK_admin_local
+        pub_table --&gt; |extarct| PK_sig_local
+        PK_sig_local --&gt; |valide|cap[IOBEWI Capsule]
+        SK_admin_local --&gt; |Déchiffre| Payload
+
+    end
+    </pre></section>
+</section>
+</section>
+<section id="interoperabilite">
+<h2>Interopérabilité<a class="headerlink" href="#interoperabilite" title="Link to this heading"></a></h2>
+<section id="profils-de-lecteurs">
+<span id="reader-profiles"></span><h3>Profils de lecteurs<a class="headerlink" href="#profils-de-lecteurs" title="Link to this heading"></a></h3>
+<p>Cette section est <strong>normative</strong> pour l’interopérabilité. Elle définit des profils
+de conformité pour les lecteurs ICF et leurs exigences minimales.</p>
+<section id="profils">
+<h4>Profils<a class="headerlink" href="#profils" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18.0%" />
+<col style="width: 82.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Profil</p></th>
+<th class="head"><p>Comportement minimal</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Reader-L0</strong></p></td>
+<td><p>Parse TLV, affiche <code class="docutils literal notranslate"><span class="pre">URL/Titre</span></code>, <code class="docutils literal notranslate"><span class="pre">Langue</span></code>, <code class="docutils literal notranslate"><span class="pre">Expiration</span></code> si présents.
+Doit afficher un état de confiance (<em>Non vérifié</em> si pas de signature).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Reader-L1</strong></p></td>
+<td><p>Calcule <code class="docutils literal notranslate"><span class="pre">0xF2</span></code>, vérifie <code class="docutils literal notranslate"><span class="pre">0xF3</span></code> avec la clé liée à <code class="docutils literal notranslate"><span class="pre">0xF4</span></code> (table locale d’autorités).
+Affiche <em>Validé (autorité X)</em> / <em>Signature invalide</em> / <em>Autorité inconnue</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Reader-L2</strong></p></td>
+<td><p>En plus, tente le déchiffrement de <code class="docutils literal notranslate"><span class="pre">0xE1-0xEF</span></code> (si présent).
+L’échec de déchiffrement ne bloque pas l’affichage des métadonnées publiques.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="matrice-de-conformite">
+<h4>Matrice de conformité<a class="headerlink" href="#matrice-de-conformite" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Capacité</p></th>
+<th class="head"><p>L0</p></th>
+<th class="head"><p>L1</p></th>
+<th class="head"><p>L2</p></th>
+<th class="head"><p>Mode Libre</p></th>
+<th class="head"><p>Mode Bridé</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Parse TLV + champs publics</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+</tr>
+<tr class="row-odd"><td><p>Calcul <code class="docutils literal notranslate"><span class="pre">0xF2</span></code> (SHA-256)</p></td>
+<td><p>Non</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Option</p></td>
+<td><p>Requis</p></td>
+</tr>
+<tr class="row-even"><td><p>Vérif <code class="docutils literal notranslate"><span class="pre">0xF3</span></code> via <code class="docutils literal notranslate"><span class="pre">0xF4</span></code></p></td>
+<td><p>Non</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Option</p></td>
+<td><p>Requis</p></td>
+</tr>
+<tr class="row-odd"><td><p>Déchiffrement <code class="docutils literal notranslate"><span class="pre">0xE1</span></code> (ECIES/X25519)</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+<td><p>Oui</p></td>
+<td><p>Option</p></td>
+<td><p>Selon politique</p></td>
+</tr>
+<tr class="row-even"><td><p>Rejet capsule non signée</p></td>
+<td><p>Non</p></td>
+<td><p>Option</p></td>
+<td><p>Option</p></td>
+<td><p>Non</p></td>
+<td><p>Oui</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="politiques-de-lecture">
+<h4>Politiques de lecture<a class="headerlink" href="#politiques-de-lecture" title="Link to this heading"></a></h4>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Modes de fonctionnement</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Comportement</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Libre</strong></p></td>
+<td><p>Accepte tout tag TLV valide, signé ou non</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bridé</strong></p></td>
+<td><p>Accepte uniquement les capsules <strong>signées par une autorité reconnue</strong></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="modes-de-lecture">
+<h3>Modes de lecture<a class="headerlink" href="#modes-de-lecture" title="Link to this heading"></a></h3>
+<p>Les modes de lecture définissent la <strong>politique de validation appliquée par un lecteur</strong>
+lorsqu’il reçoit une capsule ICF.
+Ils influencent directement la manière dont le lecteur filtre ou accepte les données
+en fonction de leur signature et de l’autorité émettrice.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Comportement</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Libre</strong></p></td>
+<td><p>Accepte tout tag TLV valide, qu’il soit signé ou non.
+Idéal pour la compatibilité maximale ou les phases de test.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bridé</strong></p></td>
+<td><p>Accepte uniquement les capsules <strong>signées par une autorité reconnue</strong>.
+Recommandé pour les environnements où la sécurité et la vérification
+des sources sont primordiales.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Ce choix de mode peut dépendre du contexte d’utilisation :
+environnement éducatif contrôlé, diffusion publique de contenu, ou développement/test.</p>
+</section>
+<section id="mecanisme-de-verification-lecteur">
+<h3>Mécanisme de vérification (lecteur)<a class="headerlink" href="#mecanisme-de-verification-lecteur" title="Link to this heading"></a></h3>
+<p>Le lecteur peut être configuré en deux modes de fonctionnement, influençant la
+gestion de la signature et la validation des capsules :</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Modes de fonctionnement</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Comportement</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Libre</strong></p></td>
+<td><p>Accepte tout tag TLV valide, qu’il soit signé ou non</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bridé</strong></p></td>
+<td><p>Accepte uniquement les capsules <strong>signées par une autorité reconnue</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Dans le mode <strong>Bridé</strong> :</p>
+<ul class="simple">
+<li><p><cite>0xF3</cite> (signature) et <cite>0xF4</cite> (AuthorityID) doivent être présents,</p></li>
+<li><p>la signature est vérifiée via une clé publique préenregistrée dans le lecteur,</p></li>
+<li><p>l’identifiant <cite>AuthorityID</cite> permet de sélectionner la clé publique appropriée dans la liste embarquée.</p></li>
+</ul>
+</section>
+</section>
+<section id="exemples">
+<h2>Exemples<a class="headerlink" href="#exemples" title="Link to this heading"></a></h2>
+</section>
+</section>
+<section id="exemples-de-badges-format-json-illustratif">
+<h1>Exemples de badges (format JSON illustratif)<a class="headerlink" href="#exemples-de-badges-format-json-illustratif" title="Link to this heading"></a></h1>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://balabewi.org/audio123.mp3&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fr&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Histoires de pirates&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tag&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;cycle&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;retention&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expires&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1767225599</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;authority_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x0123456789ABCDEF&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://balabewi.org/audio123.mp3&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fr&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Histoires de pirates&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tag&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;cycle&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;retention&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expires&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1767225599</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;hash&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bdc9aaf329d204cdefb71884a91ce08987c9a91b657f3f4583a6c88e3c58ad71&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;6b871e50c723011c6ab345e847c10d89d0a2604bced7e7c9d0fa1c8fd8fbd2b91d8df6c86156e15d1de9e68e5b4c8c7760b13ef6de25035178135eb79ab7d208&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;authority_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="mi">137</span><span class="p">,</span><span class="w"> </span><span class="mi">171</span><span class="p">,</span><span class="w"> </span><span class="mi">205</span><span class="p">,</span><span class="w"> </span><span class="mi">239</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;badge_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://balabewi.org/audio123.mp3&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fr&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Histoires de pirates&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tag&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;cycle&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;retention&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;expires&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1767225599</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;authority_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0x0123456789ABCDEF&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;system_payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;volume&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ambience&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bright&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;lock_buttons&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;badge_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;system_payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;volume&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sleep_timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;ambience&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;calm&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;badge_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;system_payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BASE64(ECIES(payload JSON))&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;signature&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;signature_ed25519&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;authority_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="mi">103</span><span class="p">,</span><span class="w"> </span><span class="mi">137</span><span class="p">,</span><span class="w"> </span><span class="mi">171</span><span class="p">,</span><span class="w"> </span><span class="mi">205</span><span class="p">,</span><span class="w"> </span><span class="mi">239</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../get-started/faq.html" class="btn btn-neutral float-left" title="FAQ" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tools/index.html" class="btn btn-neutral float-right" title="Outils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 - 2025 , IOBEWI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

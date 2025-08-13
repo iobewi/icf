@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gouvernance du registre ICF &mdash; ICF Specification Guide 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=c33b16f2" />
+
+  
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/iobewi.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="get-started/index.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="icf-specification/index.html">Spécification ICF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="icf-specification/index.html#exemples-de-badges-format-json-illustratif">Exemples de badges (format JSON illustratif)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools/index.html">Outils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lib-esp-idf/index.html">Lib ESP-IDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contribute/index.html">Contribuer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resources/index.html">Ressources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about/index.html">À propos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ICF Specification Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Gouvernance du registre ICF</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/GOVERNANCE.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gouvernance-du-registre-icf">
+<h1>Gouvernance du registre ICF<a class="headerlink" href="#gouvernance-du-registre-icf" title="Link to this heading"></a></h1>
+<p>Le présent document définit la gestion des <strong>tags TLV (0x01–0xFF)</strong> : leur
+<strong>attribution</strong>, leur <strong>statut</strong> et leur <strong>évolution</strong>.</p>
+<section id="source-de-verite">
+<h2>Source de vérité<a class="headerlink" href="#source-de-verite" title="Link to this heading"></a></h2>
+<p>La <strong>documentation officielle ICF</strong> au format RST constitue la <strong>seule référence valide</strong> pour la définition, l’attribution et le suivi des tags.
+Aucune autre copie ou dérivé du registre ne fait foi.</p>
+</section>
+<section id="roles">
+<h2>Rôles<a class="headerlink" href="#roles" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Maintainers ICF</strong> : garants de la cohérence du registre et de la compatibilité.</p></li>
+<li><p><strong>Contributeurs</strong> : proposent de nouveaux tags ou modifient des définitions via Issues/PR.</p></li>
+<li><p><strong>Implémenteurs</strong> : développent des lecteurs/émetteurs compatibles ICF (firmware, apps, outils).</p></li>
+</ul>
+</section>
+<section id="espaces-de-tags">
+<h2>Espaces de tags<a class="headerlink" href="#espaces-de-tags" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0x01–0x3F</span></code> : Métadonnées générales (titre, URL, langue…)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x40–0x7F</span></code> : Métadonnées média (réservé pour extensions futures)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x80–0x8F</span></code> : <strong>Expérimental</strong> (modifiable sans préavis)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0x90–0x9F</span></code> : <strong>Vendor-Specific</strong> (préfixe obligatoire, doc publique)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0xA0–0xDF</span></code> : Extensions publiques (sur proposition)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0xE0–0xEF</span></code> : Système &amp; chiffrement (E1…EF)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">0xF0–0xFF</span></code> : Intégrité &amp; autorité (hash, signature, authority_id)</p></li>
+</ul>
+</section>
+<section id="statuts-des-tags">
+<h2>Statuts des tags<a class="headerlink" href="#statuts-des-tags" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Proposé</strong> : soumis via Issue.</p></li>
+<li><p><strong>Réservé</strong> : accepté, en attente d’implémentation.</p></li>
+<li><p><strong>Stable</strong> : implémenté dans au moins une release avec <strong>vecteurs de test</strong> publiés.</p></li>
+<li><p><strong>Déprécié</strong> : à remplacer (successeur indiqué).</p></li>
+<li><p><strong>Retiré</strong> : interdit ; rejet impératif en mode strict.</p></li>
+</ul>
+<p>Chaque entrée de la documentation officielle indique : <em>Type</em>, <em>Nom</em>, <em>Taille max</em>, <em>Version d’intro</em>, <em>Statut</em>, <em>Lien PR/Issue</em>, <em>Compatibilité</em>.</p>
+</section>
+<section id="processus-dallocation">
+<h2>Processus d’allocation<a class="headerlink" href="#processus-dallocation" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Soumission</strong> (Issue) : type/plage, nom, taille, sémantique, exemples, impacts sécurité/interop, statut initial.</p></li>
+<li><p><strong>Review publique</strong> : maintainers + communauté.</p></li>
+<li><p><strong>Attribution</strong> : ajout dans la documentation officielle au statut <strong>Réservé</strong>.</p></li>
+<li><p><strong>Stabilisation</strong> : intégration dans une release avec :
+- implémentation,
+- <strong>vecteurs de test</strong> (binaires + manifest),
+- documentation RST à jour.
+→ passage en <strong>Stable</strong>.</p></li>
+<li><p><strong>Évolution</strong> : changement <em>breaking</em> → nouvelle version, phase <strong>Déprécié</strong> avec période de grâce, plan de migration &amp; tests.</p></li>
+</ol>
+</section>
+<section id="regles-specifiques">
+<h2>Règles spécifiques<a class="headerlink" href="#regles-specifiques" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Sécurité (0xE0–0xFF)</strong> :
+- Documenter l’impact sécurité,
+- Fournir <strong>vecteurs de test</strong>,
+- Définir la politique de compatibilité (rejet strict si absent/invalide).</p></li>
+<li><p><strong>Vendor-Specific (0x90–0x9F)</strong> :
+- Préfixe obligatoire (ex. <code class="docutils literal notranslate"><span class="pre">acme_content_hash</span></code>),
+- Documentation publique minimale,
+- Interdiction des champs de sécurité (utiliser 0xE0–0xFF).</p></li>
+<li><p><strong>Compatibilité stricte</strong> :
+- Mode strict → rejet : tags <strong>Retirés</strong>, usages hors spec, tailles invalides.
+- Mode libre → ignorer les tags inconnus, mais refuser tout tag malformé.</p></li>
+</ul>
+</section>
+<section id="versioning">
+<h2>Versioning<a class="headerlink" href="#versioning" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>La documentation officielle RST est la <strong>seule source de vérité</strong>.</p></li>
+<li><p>Le tableau “Types TLV définis” présent dans la spécification est <strong>informatif</strong> et renvoie vers la documentation officielle.</p></li>
+<li><p>Chaque ligne du registre officiel référence la <strong>PR</strong> d’introduction et la release de stabilisation.</p></li>
+</ul>
+</section>
+<section id="depreciation-retrait">
+<h2>Dépréciation &amp; retrait<a class="headerlink" href="#depreciation-retrait" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Déprécié</strong> : annoncé dans <code class="docutils literal notranslate"><span class="pre">CHANGELOG</span></code>, conservé au moins une version complète, avec successeur.</p></li>
+<li><p><strong>Retiré</strong> : rejeté en mode strict ; en mode libre → ignoré mais non interprété.</p></li>
+</ul>
+</section>
+<section id="conflits-arbitrage">
+<h2>Conflits &amp; arbitrage<a class="headerlink" href="#conflits-arbitrage" title="Link to this heading"></a></h2>
+<p>Les maintainers tranchent en dernier ressort, en priorisant :</p>
+<ol class="arabic simple">
+<li><p>la sécurité,</p></li>
+<li><p>l’interopérabilité,</p></li>
+<li><p>la stabilité (pas de changements inutiles).</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 - 2025 , IOBEWI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profils ICF &mdash; ICF Specification Guide 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=c33b16f2" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/iobewi.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../get-started/index.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Spécification ICF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#exemples-de-badges-format-json-illustratif">Exemples de badges (format JSON illustratif)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/index.html">Outils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib-esp-idf/index.html">Lib ESP-IDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contribuer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">Ressources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/index.html">À propos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ICF Specification Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Profils ICF</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/icf-specification/model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="profils-icf">
+<h1>Profils ICF<a class="headerlink" href="#profils-icf" title="Link to this heading"></a></h1>
+<p>Le format ICF peut être adapté à différents types de puces NFC/RFID et à divers usages,
+en fonction des contraintes de mémoire disponible et des besoins en sécurité.
+Pour cette raison, deux profils principaux sont définis :</p>
+<ul class="simple">
+<li><p><strong>ICF-Full</strong> : conçu pour des puces à capacité étendue (ex. NTAG215/216),
+il intègre les mécanismes de sécurité complets (<cite>0xF2</cite> Hash, <cite>0xF3</cite> Signature, <cite>0xF4</cite> AuthorityID)
+et permet une richesse maximale des métadonnées.</p></li>
+<li><p><strong>ICF-Lite</strong> : optimisé pour les puces à capacité réduite (ex. NTAG213),
+il se limite aux champs essentiels, avec une sécurité optionnelle,
+pour maximiser l’espace utile.</p></li>
+</ul>
+<p>Ces profils définissent les champs obligatoires, optionnels, et l’ordre recommandé
+pour assurer une interprétation cohérente par les lecteurs compatibles.</p>
+<section id="icf-full-recommande-ntag215-216">
+<h2>ICF-Full (recommandé NTAG215/216)<a class="headerlink" href="#icf-full-recommande-ntag215-216" title="Link to this heading"></a></h2>
+<p><strong>Requis :</strong>
+- <cite>0x01</cite> URL <strong>ou</strong> <cite>0x03</cite> Titre (au moins un des deux)
+- <cite>0xF2</cite> Hash (SHA-256) calculé <strong>sur tous les TLV précédents</strong>
+- <cite>0xF3</cite> Signature Ed25519 <strong>du hash</strong> (valeur de <cite>0xF2</cite>)
+- <cite>0xF4</cite> AuthorityID (8 octets)</p>
+<p><strong>Optionnels :</strong>
+- <cite>0x02</cite> Langue (2 octets)
+- <cite>0x04</cite> Tag pédagogique (3 octets : cycle, matière, sous-classe)
+- <cite>0x05</cite> Rétention (1 octet, jours)
+- <cite>0x06</cite> Expiration (4 octets, UNIX epoch big-endian)
+- <cite>0xE0</cite> Type badge (1 octet : 0=ressource, 1=config, 2=admin)
+- <cite>0xE1–0xEF</cite> Payload système (taille variable, JSON ou binaire, usage lecteur)</p>
+<p><strong>Ordre recommandé :</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[0x01?] [0x02?] [0x03?] [0x04?] [0x05?] [0x06?]
+[0xE0?] [0xE1–0xEF?] [0xF2] [0xF3] [0xF4] [0xFF?]
+</pre></div>
+</div>
+</section>
+<section id="icf-lite-ntag213">
+<h2>ICF-Lite (NTAG213)<a class="headerlink" href="#icf-lite-ntag213" title="Link to this heading"></a></h2>
+<p>Profil optimisé pour les puces à faible capacité mémoire, lorsque la priorité
+est de maximiser l’espace utile pour le contenu plutôt que pour les métadonnées
+et les signatures.</p>
+<p><strong>Requis :</strong>
+- <cite>0x01</cite> URL <strong>ou</strong> <cite>0x03</cite> Titre</p>
+<p><strong>Optionnels :</strong>
+- <cite>0x02</cite> Langue (2 octets)
+- <cite>0x06</cite> Expiration (4 octets, UNIX epoch big-endian)
+- <cite>0x04</cite> Tag pédagogique (3 octets : cycle, matière, sous-classe)</p>
+<p><strong>Sécurité :</strong>
+- Pas d’obligation de <cite>0xF2/0xF3/0xF4</cite>.</p>
+<blockquote>
+<div><p>Le lecteur <strong>doit</strong> afficher l’état <em>Non vérifié</em> si la signature est absente.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="icf-sur-ndef">
+<h1>ICF sur NDEF<a class="headerlink" href="#icf-sur-ndef" title="Link to this heading"></a></h1>
+<p>Le format ICF peut être encapsulé dans un message <strong>NDEF</strong> (<em>NFC Data Exchange Format</em>),
+ce qui est particulièrement utile lorsque l’on souhaite que les données ICF
+soient lisibles par des applications ou systèmes NFC standards, tout en conservant
+l’intégralité de la structure TLV.</p>
+<ul class="simple">
+<li><p><strong>Record type</strong> : MIME</p></li>
+<li><p><strong>MIME type</strong> : <cite>application/vnd.icf+tlv</cite></p></li>
+<li><p><strong>Payload</strong> : octets TLV ICF complets (incluant <cite>0xF2</cite>, <cite>0xF3</cite>, <cite>0xF4</cite> si présents)</p></li>
+<li><p><strong>Message recommandé</strong> : un seul record MIME par message NDEF</p></li>
+</ul>
+<p><strong>Avantages :</strong>
+- Permet à un lecteur NFC générique de détecter qu’il s’agit de données ICF via le MIME type.
+- Compatible avec les outils de lecture/écriture NDEF existants.
+- Facilite l’intégration dans des workflows ou applications qui s’attendent à des records NDEF.</p>
+<p><strong>Limitations :</strong>
+- Les en-têtes NDEF ne sont <strong>pas signés</strong> :</p>
+<blockquote>
+<div><p>la sécurité repose uniquement sur les champs internes ICF (<cite>0xF2</cite> Hash, <cite>0xF3</cite> Signature, <cite>0xF4</cite> AuthorityID).</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>L’encapsulation NDEF ajoute un léger surcoût en octets, à prendre en compte
+sur les puces à faible capacité.</p></li>
+</ul>
+<p><strong>Remarque :</strong>
+L’encapsulation NDEF n’implique <strong>aucune réaffectation</strong> ou modification
+des tags TLV ICF. Le contenu interne reste conforme à la spécification ICF.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 - 2025 , IOBEWI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

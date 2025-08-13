@@ -1,0 +1,30 @@
+{
+  "name": "ICF Sphinx Dev",
+  "image": "python:3.12-slim",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "lextudio.restructuredtext",
+        "trond-snekvik.simple-rst",
+        "shd101wyy.markdown-preview-enhanced"
+      ]
+    }
+  },
+  "postCreateCommand": "pip install sphinx sphinx-rtd-theme sphinx-autobuild sphinxcontrib-mermaid",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "remoteUser": "root",
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": {
+      "label": "Sphinx Live Preview",
+      "onAutoForward": "openBrowser"
+    }
+  }
+}

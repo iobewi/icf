@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profils de lecteurs &mdash; ICF Specification Guide 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=c33b16f2" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/iobewi.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../get-started/index.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Spécification ICF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#exemples-de-badges-format-json-illustratif">Exemples de badges (format JSON illustratif)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/index.html">Outils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib-esp-idf/index.html">Lib ESP-IDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contribuer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">Ressources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/index.html">À propos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ICF Specification Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Profils de lecteurs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/icf-specification/interop.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="profils-de-lecteurs">
+<span id="reader-profiles"></span><h1>Profils de lecteurs<a class="headerlink" href="#profils-de-lecteurs" title="Link to this heading"></a></h1>
+<p>Cette section est <strong>normative</strong> pour l’interopérabilité. Elle définit des profils
+de conformité pour les lecteurs ICF et leurs exigences minimales.</p>
+<section id="profils">
+<h2>Profils<a class="headerlink" href="#profils" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 18.0%" />
+<col style="width: 82.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Profil</p></th>
+<th class="head"><p>Comportement minimal</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Reader-L0</strong></p></td>
+<td><p>Parse TLV, affiche <code class="docutils literal notranslate"><span class="pre">URL/Titre</span></code>, <code class="docutils literal notranslate"><span class="pre">Langue</span></code>, <code class="docutils literal notranslate"><span class="pre">Expiration</span></code> si présents.
+Doit afficher un état de confiance (<em>Non vérifié</em> si pas de signature).</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Reader-L1</strong></p></td>
+<td><p>Calcule <code class="docutils literal notranslate"><span class="pre">0xF2</span></code>, vérifie <code class="docutils literal notranslate"><span class="pre">0xF3</span></code> avec la clé liée à <code class="docutils literal notranslate"><span class="pre">0xF4</span></code> (table locale d’autorités).
+Affiche <em>Validé (autorité X)</em> / <em>Signature invalide</em> / <em>Autorité inconnue</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Reader-L2</strong></p></td>
+<td><p>En plus, tente le déchiffrement de <code class="docutils literal notranslate"><span class="pre">0xE1-0xEF</span></code> (si présent).
+L’échec de déchiffrement ne bloque pas l’affichage des métadonnées publiques.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="matrice-de-conformite">
+<h2>Matrice de conformité<a class="headerlink" href="#matrice-de-conformite" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Capacité</p></th>
+<th class="head"><p>L0</p></th>
+<th class="head"><p>L1</p></th>
+<th class="head"><p>L2</p></th>
+<th class="head"><p>Mode Libre</p></th>
+<th class="head"><p>Mode Bridé</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Parse TLV + champs publics</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+</tr>
+<tr class="row-odd"><td><p>Calcul <code class="docutils literal notranslate"><span class="pre">0xF2</span></code> (SHA-256)</p></td>
+<td><p>Non</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Option</p></td>
+<td><p>Requis</p></td>
+</tr>
+<tr class="row-even"><td><p>Vérif <code class="docutils literal notranslate"><span class="pre">0xF3</span></code> via <code class="docutils literal notranslate"><span class="pre">0xF4</span></code></p></td>
+<td><p>Non</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+<td><p>Option</p></td>
+<td><p>Requis</p></td>
+</tr>
+<tr class="row-odd"><td><p>Déchiffrement <code class="docutils literal notranslate"><span class="pre">0xE1</span></code> (ECIES/X25519)</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+<td><p>Oui</p></td>
+<td><p>Option</p></td>
+<td><p>Selon politique</p></td>
+</tr>
+<tr class="row-even"><td><p>Rejet capsule non signée</p></td>
+<td><p>Non</p></td>
+<td><p>Option</p></td>
+<td><p>Option</p></td>
+<td><p>Non</p></td>
+<td><p>Oui</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="politiques-de-lecture">
+<h2>Politiques de lecture<a class="headerlink" href="#politiques-de-lecture" title="Link to this heading"></a></h2>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Modes de fonctionnement</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Comportement</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Libre</strong></p></td>
+<td><p>Accepte tout tag TLV valide, signé ou non</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bridé</strong></p></td>
+<td><p>Accepte uniquement les capsules <strong>signées par une autorité reconnue</strong></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="modes-de-lecture">
+<h1>Modes de lecture<a class="headerlink" href="#modes-de-lecture" title="Link to this heading"></a></h1>
+<p>Les modes de lecture définissent la <strong>politique de validation appliquée par un lecteur</strong>
+lorsqu’il reçoit une capsule ICF.
+Ils influencent directement la manière dont le lecteur filtre ou accepte les données
+en fonction de leur signature et de l’autorité émettrice.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Comportement</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Libre</strong></p></td>
+<td><p>Accepte tout tag TLV valide, qu’il soit signé ou non.
+Idéal pour la compatibilité maximale ou les phases de test.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bridé</strong></p></td>
+<td><p>Accepte uniquement les capsules <strong>signées par une autorité reconnue</strong>.
+Recommandé pour les environnements où la sécurité et la vérification
+des sources sont primordiales.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Ce choix de mode peut dépendre du contexte d’utilisation :
+environnement éducatif contrôlé, diffusion publique de contenu, ou développement/test.</p>
+</section>
+<section id="mecanisme-de-verification-lecteur">
+<h1>Mécanisme de vérification (lecteur)<a class="headerlink" href="#mecanisme-de-verification-lecteur" title="Link to this heading"></a></h1>
+<p>Le lecteur peut être configuré en deux modes de fonctionnement, influençant la
+gestion de la signature et la validation des capsules :</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Modes de fonctionnement</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 85.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Comportement</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Libre</strong></p></td>
+<td><p>Accepte tout tag TLV valide, qu’il soit signé ou non</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Bridé</strong></p></td>
+<td><p>Accepte uniquement les capsules <strong>signées par une autorité reconnue</strong></p></td>
+</tr>
+</tbody>
+</table>
+<p>Dans le mode <strong>Bridé</strong> :</p>
+<ul class="simple">
+<li><p><cite>0xF3</cite> (signature) et <cite>0xF4</cite> (AuthorityID) doivent être présents,</p></li>
+<li><p>la signature est vérifiée via une clé publique préenregistrée dans le lecteur,</p></li>
+<li><p>l’identifiant <cite>AuthorityID</cite> permet de sélectionner la clé publique appropriée dans la liste embarquée.</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 - 2025 , IOBEWI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Types de badges et sécurité &mdash; ICF Specification Guide 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=c33b16f2" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/iobewi.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../get-started/index.html">Get Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Spécification ICF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#exemples-de-badges-format-json-illustratif">Exemples de badges (format JSON illustratif)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools/index.html">Outils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lib-esp-idf/index.html">Lib ESP-IDF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contribuer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/index.html">Ressources</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/index.html">À propos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ICF Specification Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Types de badges et sécurité</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/icf-specification/security.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="types-de-badges-et-securite">
+<h1>Types de badges et sécurité<a class="headerlink" href="#types-de-badges-et-securite" title="Link to this heading"></a></h1>
+<p>Le format ICF définit plusieurs types de badges, chacun répondant à des objectifs
+différents : diffusion de ressources, configuration d’un appareil ou administration.
+Chaque type applique des exigences distinctes en matière de signature, chiffrement
+et persistance.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 33.3%" />
+<col style="width: 27.8%" />
+<col style="width: 16.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Signature requise</p></th>
+<th class="head"><p>Chiffrement requis</p></th>
+<th class="head"><p>Persistant</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ressource</p></td>
+<td><p>Optionnel / Requis selon mode</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+</tr>
+<tr class="row-odd"><td><p>Configuration</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+<td><p>Non</p></td>
+</tr>
+<tr class="row-even"><td><p>Administration</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui (ECIES)</p></td>
+<td><p>Oui</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="fonctionnement-de-la-signature-ed25519">
+<h1>Fonctionnement de la signature (Ed25519)<a class="headerlink" href="#fonctionnement-de-la-signature-ed25519" title="Link to this heading"></a></h1>
+<p>Le mécanisme de signature garantit l’authenticité et l’intégrité de la capsule.</p>
+<ul class="simple">
+<li><p>La signature est générée <strong>par l’application mobile</strong> ou la <strong>CLI</strong>, qui détient la clé privée.</p></li>
+<li><p>Processus côté émetteur :</p>
+<ol class="arabic simple">
+<li><p>Construction des TLV à signer (<cite>0x01</cite>, <cite>0x02</cite>, <cite>0x03</cite>, <cite>0x04</cite>, <cite>0x05</cite>, <cite>0x06</cite>, etc.)</p></li>
+<li><p>Calcul du hash SHA-256 du buffer TLV</p></li>
+<li><p>Signature de ce hash avec la clé privée (Ed25519)</p></li>
+<li><p>Ajout des TLV <cite>0xF2</cite> (hash), <cite>0xF3</cite> (signature) et <cite>0xF4</cite> (AuthorityID)</p></li>
+</ol>
+</li>
+<li><p>Côté lecteur en mode bridé : seules les capsules signées par une clé publique reconnue</p></li>
+</ul>
+<p>sont acceptées, la clé étant identifiée via le champ <cite>0xF4</cite>.</p>
+</section>
+<section id="securite-cryptographique-et-gestion-des-cles">
+<h1>Sécurité cryptographique et gestion des clés<a class="headerlink" href="#securite-cryptographique-et-gestion-des-cles" title="Link to this heading"></a></h1>
+<p>Le modèle de sécurité ICF repose sur :
+- une <strong>signature Ed25519</strong> pour authentifier l’émetteur,
+- un <strong>chiffrement asymétrique ECIES/X25519</strong> pour protéger les données sensibles</p>
+<blockquote>
+<div><p>(<cite>0xE1</cite>) des badges d’administration (<cite>badge_type: 0x02</cite>).</p>
+</div></blockquote>
+<section id="solution-retenue-cle-partagee-entre-lecteurs-sk-admin">
+<h2>Solution retenue — Clé partagée entre lecteurs (<cite>SK_admin</cite>)<a class="headerlink" href="#solution-retenue-cle-partagee-entre-lecteurs-sk-admin" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Une clé privée <cite>SK_admin</cite> est générée une seule fois par l’application mobile ou la CLI.</p></li>
+<li><p>Elle est copiée localement sur chaque lecteur lors de l’appairage sécurisé.</p></li>
+<li><p>Le champ <cite>0xE1</cite> est chiffré une fois avec la clé publique dérivée de <cite>SK_admin</cite> (via X25519).</p></li>
+<li><p>Tous les lecteurs appairés peuvent déchiffrer localement la donnée.</p></li>
+<li><p>Avantages :
+- <strong>Simple</strong> : un seul chiffrement pour N lecteurs,
+- <strong>Efficace</strong> : économie d’espace sur la puce,
+- <strong>Sûr</strong> : si le firmware active le chiffrement du flash,
+- <strong>Interopérable</strong> : lisible par tous les lecteurs appairés.</p></li>
+</ul>
+<p>&gt; <strong>Remarque</strong> : la clé <cite>SK_admin</cite> n’est jamais exposée dans le badge ; seule sa clé publique est utilisée pour le chiffrement.</p>
+<pre  class="mermaid">
+        flowchart TB
+
+    SK_sig[Clé privée de signature&lt;br&gt;SK_sig Ed25519]:::priv
+    PK_sig[Clé publique de signature&lt;br&gt;PK_sig Ed25519]:::pub
+    PK_sig_local[Clé publique de signature&lt;br&gt;PK_sig Ed25519]:::pub
+    SK_master[Clé maître de groupe&lt;br&gt;SK_master X25519]:::priv
+    SK_admin[Clé ECIES partagée&lt;br&gt;SK_admin ]:::priv
+    PK_admin[Clé publique ECIES&lt;br&gt;PK_admin]:::pub
+    authority_id[Authority ID  &lt;br&gt;ex: 0x012345...]:::meta
+    pub_registry[Table des autorités&lt;br&gt;authority_id → PK_sig]:::tab
+    pub_table[Table embarquée&lt;br&gt;authority_id → PK_sig]:::pub
+    SK_admin_local[SK_admin stockée localement&lt;br&gt; volume  chiffré]:::priv
+
+
+    %% Phase 1 : Génération des clés côté émetteur
+    subgraph Client[&quot;Construction (App mobile / CLI)&quot;]
+        direction TB
+        SK_sig --&gt;|génère| PK_sig
+        authority_id  --&gt;|indexée dans| pub_registry
+        PK_sig --&gt;|indexée dans| pub_registry
+
+        SK_master --&gt;|dérive| SK_admin
+        SK_admin --&gt;|génère| PK_admin
+    end
+
+    %% Phase 2 : Configuration initiale du lecteur
+    subgraph Lecteur[&quot;Interprétation (Lecteur Balabewi)&quot;]
+        direction TB
+        pub_registry --&gt;|copiée| pub_table
+        SK_admin --&gt;|copiée vers lecteur| SK_admin_local
+    end
+
+
+    %% Construction de la capsule
+    subgraph Client[&quot;Construction (App mobile / CLI)&quot;]
+        direction TB
+        SK_sig --&gt;|signe F2 : SHA256 des TLV| capsule_f3[Signature]
+        authority_id --&gt;|copié dans capsule| capsule_f4[Authority ID]
+        PK_admin --&gt;|chiffre payload JSON| capsule_e1[Payload chiffré]
+    end
+
+    %% Capsule
+    subgraph Capsule[&quot;Capsule CIF&quot;]
+        capsule_f3 --&gt; 0xF3
+        capsule_f4 --&gt; 0xF4
+        capsule_e1 --&gt; 0xF1
+    end
+
+    %% Utilisation côté lecteur
+    subgraph Lecteur[&quot;Interprétation (Lecteur Balabewi)&quot;]
+        direction TB
+
+        0xF4 --&gt;|lookup - authority_id| pub_table
+        0xF3 --&gt;|verify - signature| PK_sig_local
+        0xF1 --&gt;|decrypt - payload| SK_admin_local
+        pub_table --&gt; |extarct| PK_sig_local
+        PK_sig_local --&gt; |valide|cap[IOBEWI Capsule]
+        SK_admin_local --&gt; |Déchiffre| Payload
+
+    end
+    </pre></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025 - 2025 , IOBEWI.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
