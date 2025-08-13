@@ -32,6 +32,11 @@ Sécurité
 ********
 .. include:: security.rst
 
+****************
+Interopérabilité
+****************
+.. include:: interop.rst
+
 ********
 Exemples 
 ********

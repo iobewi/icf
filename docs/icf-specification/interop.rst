@@ -1,0 +1,133 @@
+.. _reader-profiles:
+
+Profils de lecteurs
+===================
+
+Cette section est **normative** pour l’interopérabilité. Elle définit des profils
+de conformité pour les lecteurs ICF et leurs exigences minimales.
+
+Profils
+-------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 18 82
+
+   * - Profil
+     - Comportement minimal
+   * - **Reader-L0**
+     - Parse TLV, affiche ``URL/Titre``, ``Langue``, ``Expiration`` si présents.
+       Doit afficher un état de confiance (*Non vérifié* si pas de signature).
+   * - **Reader-L1**
+     - Calcule ``0xF2``, vérifie ``0xF3`` avec la clé liée à ``0xF4`` (table locale d’autorités).
+       Affiche *Validé (autorité X)* / *Signature invalide* / *Autorité inconnue*.
+   * - **Reader-L2**
+     - En plus, tente le déchiffrement de ``0xE1-0xEF`` (si présent).
+       L’échec de déchiffrement ne bloque pas l’affichage des métadonnées publiques.
+
+Matrice de conformité
+---------------------
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 15 15 15 15 15
+
+   * - Capacité
+     - L0
+     - L1
+     - L2
+     - Mode Libre
+     - Mode Bridé
+   * - Parse TLV + champs publics
+     - Oui
+     - Oui
+     - Oui
+     - Oui
+     - Oui
+   * - Calcul ``0xF2`` (SHA-256)
+     - Non
+     - Oui
+     - Oui
+     - Option
+     - Requis
+   * - Vérif ``0xF3`` via ``0xF4``
+     - Non
+     - Oui
+     - Oui
+     - Option
+     - Requis
+   * - Déchiffrement ``0xE1`` (ECIES/X25519)
+     - Non
+     - Non
+     - Oui
+     - Option
+     - Selon politique
+   * - Rejet capsule non signée
+     - Non
+     - Option
+     - Option
+     - Non
+     - Oui
+
+Politiques de lecture
+---------------------
+
+.. list-table:: Modes de fonctionnement
+   :header-rows: 1
+   :widths: 15 85
+
+   * - Mode
+     - Comportement
+   * - **Libre**
+     - Accepte tout tag TLV valide, signé ou non
+   * - **Bridé**
+     - Accepte uniquement les capsules **signées par une autorité reconnue**
+
+
+Modes de lecture
+================
+
+Les modes de lecture définissent la **politique de validation appliquée par un lecteur**
+lorsqu’il reçoit une capsule ICF.  
+Ils influencent directement la manière dont le lecteur filtre ou accepte les données
+en fonction de leur signature et de l’autorité émettrice.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 15 85
+
+   * - Mode
+     - Comportement
+   * - **Libre**
+     - Accepte tout tag TLV valide, qu'il soit signé ou non.
+       Idéal pour la compatibilité maximale ou les phases de test.
+   * - **Bridé**
+     - Accepte uniquement les capsules **signées par une autorité reconnue**.
+       Recommandé pour les environnements où la sécurité et la vérification
+       des sources sont primordiales.
+
+Ce choix de mode peut dépendre du contexte d’utilisation :
+environnement éducatif contrôlé, diffusion publique de contenu, ou développement/test.
+
+Mécanisme de vérification (lecteur)
+===================================
+
+Le lecteur peut être configuré en deux modes de fonctionnement, influençant la
+gestion de la signature et la validation des capsules :
+
+.. list-table:: Modes de fonctionnement
+   :header-rows: 1
+   :widths: 15 85
+
+   * - Mode
+     - Comportement
+   * - **Libre**
+     - Accepte tout tag TLV valide, qu'il soit signé ou non
+   * - **Bridé**
+     - Accepte uniquement les capsules **signées par une autorité reconnue**
+
+Dans le mode **Bridé** :
+
+* `0xF3` (signature) et `0xF4` (AuthorityID) doivent être présents,
+* la signature est vérifiée via une clé publique préenregistrée dans le lecteur,
+* l’identifiant `AuthorityID` permet de sélectionner la clé publique appropriée dans la liste embarquée.
