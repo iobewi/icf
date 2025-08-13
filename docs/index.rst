@@ -8,11 +8,11 @@ IOBEWI Capsule Format (ICF)
    Cette documentation couvre **la spécification ICF**, les **outils associés**,
    ainsi que son **implémentation ESP-IDF** et les guides pour contribuer.
 
-==================  ==================  ==================
+==================  ==================      ==================
 |Get Started|_      |ICF Specification|_    |Tools & Testing|_
-------------------  ------------------  ------------------
+------------------  ------------------      ------------------
 `Get Started`_      `ICF Specification`_    `Tools & Testing`_
-==================  ==================  ==================
+==================  ==================      ==================
 
 .. |Get Started| image:: _static/1F680_color.png
    :width: 200px
