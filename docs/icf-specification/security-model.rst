@@ -1,13 +1,26 @@
 Types de badges et sécurité
 ===========================
 
-| Type           | Signature requise | Chiffrement requis | Persistant |
-| -------------- | ----------------- | ------------------ | ----------- |
-| Ressource      | Optionnel / Requis selon mode | Non | Non |
-| Configuration  | Non | Non | Non |
-| Administration | Oui | Oui (ECIES) | Oui |
+.. list-table::
+   :header-rows: 1
+   :widths: 20 30 25 15
 
----
+   * - Type
+     - Signature requise
+     - Chiffrement requis
+     - Persistant
+   * - Ressource
+     - Optionnel / Requis selon mode
+     - Non
+     - Non
+   * - Configuration
+     - Non
+     - Non
+     - Non
+   * - Administration
+     - Oui
+     - Oui (ECIES)
+     - Oui
 
 Gouvernance & attribution des tags
 ==================================
@@ -24,7 +37,6 @@ Pour proposer un nouveau type TLV :
 La procédure complète et la liste des mainteneurs sont disponibles dans
 [`GOVERNANCE.md`](./GOVERNANCE.md).
 
----
 
 Objectif
 ========
@@ -38,22 +50,30 @@ Ce format vise à :
 * s'adapter au **contexte scolaire ou familial**, en mode bridé ou ouvert,
 * intégrer dès le départ **tous les mécanismes utiles** à la gouvernance, la sécurité et la pérennité des contenus.
 
----
-
 Format TLV général
 ==================
 
 Chaque champ suit la structure TLV :
 
-| Champ    | Taille   | Description                       |
-| -------- | -------- | --------------------------------- |
-| `Type`   | 1 octet  | Identifiant du champ              |
-| `Length` | 1 octet  | Taille du champ `Value` en octets |
-| `Value`  | N octets | Donnée encodée                    |
+.. list-table::
+   :header-rows: 1
+   :widths: 20 15 65
+
+   * - Champ
+     - Taille
+     - Description
+   * - ``Type``
+     - 1 octet
+     - Identifiant du champ
+   * - ``Length``
+     - 1 octet
+     - Taille du champ ``Value`` en octets
+   * - ``Value``
+     - N octets
+     - Donnée encodée
+
 
 Les TLV sont chaînés les uns à la suite, l'ordre est libre, **sauf pour la signature qui doit clore la séquence**.
-
----
 
 Convention de codage
 ====================
@@ -61,8 +81,6 @@ Convention de codage
 * **Endianness** : tous les entiers multi-octets (timestamps, identifiants) sont codés **big-endian**.
 * **Texte** : chaînes UTF-8 **sans BOM**, maximum strict indiqué par `Length`. Aucun encodage alterné autorisé (ex. UTF-16).
 * **Tolérance** : un lecteur peut ignorer les champs inconnus (`Type ∉ [0x01–0xF4]`) s’il est en mode libre. Il doit rejeter les capsules invalides en mode bridé.
-
----
 
 Détail des champs TLV
 =====================
@@ -115,31 +133,55 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 Tableau des cycles (octet 1)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-| Valeur (hex) | Cycle scolaire           |
-|--------------|--------------------------|
-| `0x00`       | Non défini               |
-| `0x01`       | Cycle 1 (maternelle)     |
-| `0x02`       | Cycle 2 (CP-CE1-CE2)     |
-| `0x03`       | Cycle 3 (CM1-CM2-6e)     |
-| `0x04`       | Cycle 4 (5e-4e-3e)       |
-| `0xFE`       | Réservé usage local      |
-| `0xFF`       | Réservé usage futur      |
+.. list-table::
+   :header-rows: 1
+   :widths: 20 60
+
+   * - Valeur (hex)
+     - Cycle scolaire
+   * - ``0x00``
+     - Non défini
+   * - ``0x01``
+     - Cycle 1 (maternelle)
+   * - ``0x02``
+     - Cycle 2 (CP-CE1-CE2)
+   * - ``0x03``
+     - Cycle 3 (CM1-CM2-6e)
+   * - ``0x04``
+     - Cycle 4 (5e-4e-3e)
+   * - ``0xFE``
+     - Réservé usage local
+   * - ``0xFF``
+     - Réservé usage futur
 
 Tableau des matières (octet 2)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-| Valeur (hex) | Matière / thème          |
-|--------------|--------------------------|
-| `0x00`       | Non défini               |
-| `0x01`       | Lecture / histoire       |
-| `0x02`       | Sciences / nature        |
-| `0x03`       | Musique / chant          |
-| `0x04`       | Langue étrangère         |
-| `0x05`       | Projet personnalisé      |
-| `0x06`       | Mathématiques            |
-| `0x07`       | Éducation civique        |
-| `0xFE`       | Réservé usage local      |
-| `0xFF`       | Réservé usage futur      |
+.. list-table::
+   :header-rows: 1
+
+   * - Valeur (hex)
+     - Matière / thème
+   * - `0x00`
+     - Non défini
+   * - `0x01`
+     - Lecture / histoire
+   * - `0x02`
+     - Sciences / nature
+   * - `0x03`
+     - Musique / chant
+   * - `0x04`
+     - Langue étrangère
+   * - `0x05`
+     - Projet personnalisé
+   * - `0x06`
+     - Mathématiques
+   * - `0x07`
+     - Éducation civique
+   * - `0xFE`
+     - Réservé usage local
+   * - `0xFF`
+     - Réservé usage futur
 
 Sous-classe libre (octet 3)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -160,10 +202,15 @@ Sous-classe libre (octet 3)
 * **Contenu** : Nombre de jours pendant lesquels le média est conservé localement
 * **Valeurs possibles** :
 
-| Valeur          | Signification                 |
-| --------------- | ----------------------------- |
-| `0x00`          | Pas de stockage local         |
-| `0x01` – `0xFF` | Stockage entre 1 et 255 jours |
+.. list-table::
+   :header-rows: 1
+
+   * - Valeur
+     - Signification
+   * - `0x00`
+     - Pas de stockage local
+   * - `0x01` – `0xFF`
+     - Stockage entre 1 et 255 jours
 
 > Permet de contrôler la place mémoire et l’actualisation automatique du contenu.
 
@@ -189,11 +236,34 @@ Sous-classe libre (octet 3)
   * `0x02` → Badge administration *(opérations critiques ou sensibles)*
 * **Obligatoire** : Non — en son absence, le badge est interprété comme une ressource (`0x00` par défaut)
 
-| Type           | Valeur | Signature requise                   | Chiffrement requis | Persistant | Interprétation                               |
-| -------------- | ------ | ----------------------------------- | ------------------ | ---------- | -------------------------------------------- |
-| Ressource      | 0x00   | Optionnelle (requise si mode bridé) | Non                | Non        | Contenu à lire (audio, vidéo, doc...)        |
-| Configuration  | 0x01   | Non                                 | Non                | Non        | Paramétrage simple d’un appareil             |
-| Administration | 0x02   | Oui                                 | Oui (ECIES)        | Oui        | Configuration critique / commandes sensibles |
+
+.. list-table::
+   :header-rows: 1
+
+   * - Type
+     - Valeur
+     - Signature requise
+     - Chiffrement requis
+     - Persistant
+     - Interprétation
+   * - Ressource
+     - 0x00
+     - Optionnelle (requise si mode bridé)
+     - Non
+     - Non
+     - Contenu à lire (audio, vidéo, doc...)
+   * - Configuration
+     - 0x01
+     - Non
+     - Non
+     - Non
+     - Paramétrage simple d’un appareil
+   * - Administration
+     - 0x02
+     - Oui
+     - Oui (ECIES)
+     - Oui
+     - Configuration critique / commandes sensibles
 
 > Les badges de configuration sont interprétés au moment de la lecture et n'ont pas besoin d’être persistés.
 > Les badges d’administration peuvent modifier de façon persistante la configuration du lecteur (ex: clés Wi-Fi, endpoints, règles de sécurité…).
@@ -272,8 +342,6 @@ Badge d’administration (`badge_type: 0x02`)
 * **Utilité** : Optionnelle — peut marquer explicitement la fin d’une capsule
 * **Interprétation** : Indique qu’aucun champ ne suit
 
----
-
 # Addendum — Profils, Readers, et NDEF (aligné sur TLV v1)
 
 Ce document complète SPEC-ICF.md sans modifier la table TLV existante.
@@ -298,9 +366,9 @@ ICF-Full (recommandé NTAG215/216)
 - `0xE1–0xEF` Payload système (JSON ou binaire, usage lecteur)
 
 **Ordre recommandé :**
-```
-[0x01?] [0x02?] [0x03?] [0x04?] [0x05?] [0x06?] [0xE0?] [0xE1–0xEF?] [0xF2] [0xF3] [0xF4] [0xFF?]
-```
+::
+
+[0x01?] [0x02?] [0x03?] [0x04?] [0x05?] [0x06?] [0xE0?] [0xE1–0xEF?] [0xF2] [0xF3] [0xF4] [0xFF?]   
 
 ICF-Lite (NTAG213)
 ------------------
@@ -368,112 +436,6 @@ Fonctionnement de la signature (Ed25519)
 
 * Le lecteur, s’il est bridé, ne lit **que les capsules signées par une clé publique reconnue**, identifiée grâce au champ `0xF4`.
 
----
-
-Exemple d’un badge en format JSON
----------------------------------
-
-Badge de ressource (`badge_type: 0x00`)
----------------------------------------
-
-Minimal :
-^^^^^^^^^
-
-```json
-{
-  "url": "https://balabewi.org/audio123.mp3",
-  "language": "fr",
-  "title": "Histoires de pirates",
-  "tag": {
-    "cycle": 1,
-    "subject": 1,
-    "sub": 0
-  },
-  "retention": 7,
-  "expires": 1767225599,
-  "authority_id": "0x0123456789ABCDEF"
-}
-```
-
-Complet :
-^^^^^^^^^
-
-```json
-{
-  "url": "https://balabewi.org/audio123.mp3",
-  "language": "fr",
-  "title": "Histoires de pirates",
-  "tag": {
-    "cycle": 1,
-    "subject": 1,
-    "sub": 0
-  },
-  "retention": 7,
-  "expires": 1767225599,
-  "hash": "bdc9aaf329d204cdefb71884a91ce08987c9a91b657f3f4583a6c88e3c58ad71",
-  "signature": "6b871e50c723011c6ab345e847c10d89d0a2604bced7e7c9d0fa1c8fd8fbd2b91d8df6c86156e15d1de9e68e5b4c8c7760b13ef6de25035178135eb79ab7d208",
-  "authority_id": [1, 35, 69, 103, 137, 171, 205, 239]
-}
-```
-
-Avec paramètre de configuration :
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-```json
-{
-  "badge_type": 0,
-  "url": "https://balabewi.org/audio123.mp3",
-  "language": "fr",
-  "title": "Histoires de pirates",
-  "tag": {
-    "cycle": 1,
-    "subject": 1,
-    "sub": 0
-  },
-  "retention": 7,
-  "expires": 1767225599,
-  "authority_id": "0x0123456789ABCDEF",
-  "system_payload": {
-    "volume": 50,
-    "ambience": "bright",
-    "lock_buttons": true
-  }
-}
-```
-
-Badge de configuration (`badge_type: 0x01`)
--------------------------------------------
-
-Ce type de badge permet de configurer des paramètres simples du lecteur, sans chiffrement ni signature obligatoire.
-
-```json
-{
-  "badge_type": 1,
-  "system_payload": {
-    "volume": 70,
-    "sleep_timeout": 120,
-    "ambience": "calm"
-  }
-}
-```
-
-Badge d’administration (`badge_type: 0x02`)
--------------------------------------------
-
-Pour respecter la spécification, le contenu d’un badge d’administration (`badge_type: 2`) ne doit **jamais** exposer des données en clair dans le champ `system_payload`.
-Le contenu JSON original est d’abord sérialisé, puis chiffré via ECIES, puis encodé en base64.
-Le champ `system_payload` dans l’exemple JSON est une chaîne binaire chiffrée (souvent encodée en Base64 dans les outils). Elle ne peut être interprétée qu’après déchiffrement par un lecteur équipé de la bonne clé.
-
-```json
-{
-  "badge_type": 2,
-  "system_payload": "BASE64(ECIES(payload JSON))",
-  "signature": "<signature_ed25519>",
-  "authority_id": [1, 35, 69, 103, 137, 171, 205, 239]
-}
-```
-
----
 
 Espace utilisé sur NTAG215 (504 octets max)
 ===========================================
@@ -481,66 +443,110 @@ Espace utilisé sur NTAG215 (504 octets max)
 Capsule de ressource (`badge_type: 0x00`)
 -----------------------------------------
 
-| Champ              | Taille typique     |
-| ------------------ | ------------------ |
-| `0x01` URL         | \~120 à 200 octets |
-| `0x02` Langue      | 2 octets           |
-| `0x03` Titre       | \~32 à 64 octets   |
-| `0x04` Tag péd.    | 3 octets           |
-| `0x05` Rétention   | 1 octet            |
-| `0x06` Expiration  | 4 octets           |
-| `0xF2` Hash        | 32 octets          |
-| `0xF3` Signature   | 64 octets          |
-| `0xF4` AuthorityID | 8 octets           |
-| `0xFF` Fin         | 0 à 2 octets       |
-| **Total**          | **\~330 à 430 o**  |
+.. list-table::
+   :header-rows: 1
+
+   * - Champ
+     - Taille typique
+   * - `0x01` URL
+     - \~120 à 200 octets
+   * - `0x02` Langue
+     - 2 octets
+   * - `0x03` Titre
+     - \~32 à 64 octets
+   * - `0x04` Tag péd.
+     - 3 octets
+   * - `0x05` Rétention
+     - 1 octet
+   * - `0x06` Expiration
+     - 4 octets
+   * - `0xF2` Hash
+     - 32 octets
+   * - `0xF3` Signature
+     - 64 octets
+   * - `0xF4` AuthorityID
+     - 8 octets
+   * - `0xFF` Fin
+     - 0 à 2 octets
+   * - **Total**
+     - **\~330 à 430 o**
 
 Badge de configuration (`badge_type: 0x01`)
 -------------------------------------------
 
-| Champ               | Taille typique   |
-| ------------------- | ---------------- |
-| `0xE0` Type         | 1 octet          |
-| `0xE1` Payload JSON | \~30 à 150 o     |
-| `0xFF` Fin          | 0 à 2 octets     |
-| **Total**           | **\~40 à 160 o** |
+.. list-table::
+   :header-rows: 1
+
+   * - Champ
+     - Taille typique
+   * - `0xE0` Type
+     - 1 octet
+   * - `0xE1` Payload JSON
+     - \~30 à 150 o
+   * - `0xFF` Fin
+     - 0 à 2 octets
+   * - **Total**
+     - **\~40 à 160 o**
 
 > Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
 
 Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
 --------------------------------------------------------------------
 
-| Champ                        | Taille typique         |
-| ---------------------------- | ---------------------- |
-| URL (`0x01`)                 | \~120 à 200 octets     |
-| Langue (`0x02`)              | 2 octets               |
-| Titre (`0x03`)               | \~32 à 64 octets       |
-| Tag pédagogique (`0x04`)     | 3 octets               |
-| Rétention (`0x05`)           | 1 octet                |
-| Expiration (`0x06`)          | 4 octets               |
-| Payload config JSON (`0xE1`) | \~50 à 100 o           |
-| Hash (`0xF2`)                | 32 octets              |
-| Signature (`0xF3`)           | 64 octets              |
-| Authority ID (`0xF4`)        | 8 octets               |
-| Fin (`0xFF`)                 | 0 à 2 octets           |
-| **Total**                    | **\~370 à 480 octets** |
+.. list-table::
+   :header-rows: 1
+
+   * - Champ
+     - Taille typique
+   * - URL (`0x01`)
+     - \~120 à 200 octets
+   * - Langue (`0x02`)
+     - 2 octets
+   * - Titre (`0x03`)
+     - \~32 à 64 octets
+   * - Tag pédagogique (`0x04`)
+     - 3 octets
+   * - Rétention (`0x05`)
+     - 1 octet
+   * - Expiration (`0x06`)
+     - 4 octets
+   * - Payload config JSON (`0xE1`)
+     - \~50 à 100 o
+   * - Hash (`0xF2`)
+     - 32 octets
+   * - Signature (`0xF3`)
+     - 64 octets
+   * - Authority ID (`0xF4`)
+     - 8 octets
+   * - Fin (`0xFF`)
+     - 0 à 2 octets
+   * - **Total**
+     - **\~370 à 480 octets**
 
 > Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
 
 Badge d’administration (`badge_type: 0x02`)
 -------------------------------------------
 
-| Champ                  | Taille typique    |
-| ---------------------- | ----------------- |
-| `0xE0` Type            | 1 octet           |
-| `0xE1` Payload chiffré | \~64 à 128 o      |
-| `0xF2` Hash            | 32 octets         |
-| `0xF3` Signature       | 64 octets         |
-| `0xF4` AuthorityID     | 8 octets          |
-| `0xFF` Fin             | 0 à 2 octets      |
-| **Total**              | **\~170 à 240 o** |
+.. list-table::
+   :header-rows: 1
 
----
+   * - Champ
+     - Taille typique
+   * - `0xE0` Type
+     - 1 octet
+   * - `0xE1` Payload chiffré
+     - \~64 à 128 o
+   * - `0xF2` Hash
+     - 32 octets
+   * - `0xF3` Signature
+     - 64 octets
+   * - `0xF4` AuthorityID
+     - 8 octets
+   * - `0xFF` Fin
+     - 0 à 2 octets
+   * - **Total**
+     - **\~170 à 240 o**
 
 Outils recommandés
 ==================
@@ -553,17 +559,17 @@ CLI ou lib de référence
 * Vérification par clé publique
 * Export/import en JSON
 
----
-
 Modes de lecture
 ================
+.. list-table::
+   :header-rows: 1
 
-| Mode      | Description                                                       |
-| --------- | ----------------------------------------------------------------- |
-| **Libre** | Tout TLV valide est accepté, signé ou non                         |
-| **Bridé** | Seules les capsules avec `0xF3` et `0xF4` valides sont autorisées |
-
----
+   * - Mode
+     - Description
+   * - **Libre**
+     - Tout TLV valide est accepté, signé ou non
+   * - **Bridé**
+     - Seules les capsules avec `0xF3` et `0xF4` valides sont autorisées
 
 Sécurité cryptographique et gestion des clés
 ============================================
@@ -648,5 +654,3 @@ flowchart TB
 
     end
 ```
-    
----
