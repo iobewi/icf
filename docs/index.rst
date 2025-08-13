@@ -9,21 +9,46 @@ IOBEWI Capsule Format (ICF)
    ainsi que son **implémentation ESP-IDF** et les guides pour contribuer.
 
 ==================  ==================  ==================
-|Get Started|_      |API Reference|_    |API Guides|_
+|Get Started|_      |ICF Specification|_    |Tools & Testing|_
 ------------------  ------------------  ------------------
-`Get Started`_      `API Reference`_    `API Guides`_
+`Get Started`_      `ICF Specification`_    `Tools & Testing`_
 ==================  ==================  ==================
 
-.. |Get Started| image:: ../_static/get-started.png
+.. |Get Started| image:: _static/1F680_color.png
+   :width: 200px
+   :alt: Get Started
 .. _Get Started: get-started/index.html
 
-.. |API Reference| image:: ../_static/api-reference.png
-.. _API Reference: api-reference/index.html
+.. |ICF Specification| image:: _static/1F4DA_color.png
+   :width: 200px
+   :alt: ICF Specification
+.. _ICF Specification: icf-specification/index.html
 
-.. |API Guides| image:: ../_static/api-guides.png
-.. _API Guides: api-guides/index.html
+.. |Tools & Testing| image:: _static/1F6E0_color.png
+   :width: 200px
+   :alt: Tools & Testing
+.. _Tools & Testing: tools/index.html
 
-.. _Libraries and Frameworks: libraries-and-frameworks/index.html
+====================  =========================  =========================
+|Lib ESP-IDF|_        |Contribute|_              |Resources & About|_
+--------------------  --------------------------  ------------------------
+`Lib ESP-IDF`_        `Contribute`_              `Resources & About`_
+====================  =========================  =========================
+
+.. |Lib ESP-IDF| image:: _static/E1C1.svg
+   :width: 200px
+   :alt: Lib ESP-IDF
+.. _Lib ESP-IDF: lib-esp-idf/index.html
+
+.. |Contribute| image:: _static/1F9E9.svg
+   :width: 200px
+   :alt: Contribute
+.. _Contribute: contribute/index.html
+
+.. |Resources & About| image:: _static/1F12F.svg
+   :width: 200px
+   :alt: Resources & About
+.. _Resources & About: resources/index.html
 
 
 .. toctree::
