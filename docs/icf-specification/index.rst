@@ -20,6 +20,11 @@ Modèle
 ******
 .. include:: model.rst
 
+**********************
+Politique de rétention
+**********************
+.. include:: source_policy.rst
+
 ********
 Sécurité
 ********
