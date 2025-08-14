@@ -26,15 +26,11 @@ Structure générique
 Les TLV sont chaînés les uns à la suite.  
 L’ordre est libre, **sauf pour la signature (`0xF3`) qui doit clore la séquence**.
 
-
 Conventions de codage
 ---------------------
 
 * **Endianness** : tous les entiers multi-octets (timestamps, identifiants) sont en **big-endian**.
 * **Texte** : chaînes UTF-8 **sans BOM**, longueur maximale strictement indiquée par `Length`. Aucun encodage alternatif (UTF-16, etc.) n’est autorisé.
-* **Tolérance** :
-  * Mode libre → un lecteur **peut** ignorer les champs inconnus (`Type ∉ [0x01–0xF4]`).
-  * Mode bridé → un lecteur **doit** rejeter toute capsule contenant un champ non conforme ou invalide.
 
 .. tip::
    En lecture, le parseur TLV **doit** parcourir la capsule séquentiellement et valider chaque champ avant de passer au suivant.  
@@ -45,7 +41,9 @@ Conventions de codage
 Détail des champs TLV
 =====================
 
-Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière précise, avec son rôle, sa structure, et ses cas d’usage.
+Chaque champ TLV défini dans l'ICF est décrit ci-dessous de manière précise, avec son rôle, sa structure, et ses cas d’usage.
+
+.. _tag_0x01:
 
 `0x01` – URL du contenu
 -----------------------
@@ -56,7 +54,10 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Exemple** : `https://balabewi.org/audio123.mp3`
 * **Obligatoire** : Oui
 
-> Le lien doit être accessible publiquement, sans authentification, et stable dans le temps.
+.. note::
+  Le lien doit être accessible publiquement, sans authentification, et stable dans le temps.
+
+.. _tag_0x02:
 
 `0x02` –  Langue
 ----------------
@@ -66,8 +67,11 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Contenu** : Code à deux lettres représentant la langue principale du contenu numerique
 * **Obligatoire** : Non, mais recommandé
 * **Utilité** : 
+  
   * Filtrage de contenu par langue dans une interface multilingue
   * Limitation géographique ou pédagogique selon la langue cible
+
+.. _tag_0x03:
 
 `0x03` – Titre
 --------------
@@ -77,6 +81,8 @@ Chaque champ TLV défini dans l'ICF v1 est décrit ci-dessous de manière préci
 * **Contenu** : Titre lisible du média (ex. : *Histoires de pirates*)
 * **Obligatoire** : Non, mais recommandé
 * **Utilité** : Affichage dans une interface de supervision ou app mobile, classement, export
+
+.. _tag_0x04:
 
 `0x04` – Tag pédagogique
 ------------------------
@@ -148,11 +154,14 @@ Sous-classe libre (octet 3)
 
 * Utilisation libre par l’émetteur de la capsule (enseignant, app mobile…)
 * Peut désigner :
+  
   * un niveau précis (ex. : CE1 → 0x11)
   * un groupe classe (ex. : ULIS → 0x3A)
   * une série pédagogique (ex. : série "Écoute active" → 0x80)
 * Valeurs non normalisées à ce jour
   * Si non utilisé : `0x00`
+
+.. _tag_0x05:
 
 `0x05` – Durée de rétention
 ---------------------------
@@ -160,19 +169,19 @@ Sous-classe libre (octet 3)
 * **Taille** : 1 octet
 * **Type de données** : entier non signé (uint8)
 * **Contenu** : Nombre de jours pendant lesquels le média est conservé localement
+* **Obligatoire** : Non, mais conseillé dans un cadre scolaire ou temporaire
 * **Valeurs possibles** :
+ * ``0x00`` Pas de stockage local (lecture en direct uniquement)
+ * ``0x01 – 0xFF`` Stockage entre 1 et 255 jours
+  
+.. note::
+   Un lecteur peut ajuster ou ignorer cette valeur si une politique plus restrictive
+   (ex. `0x07 – SourcePolicy` ou règle locale) est en vigueur.
 
-.. list-table::
-   :header-rows: 1
+.. tip::
+   Utilisez ce champ pour optimiser la place mémoire et planifier l’actualisation automatique du contenu.
 
-   * - Valeur
-     - Signification
-   * - `0x00`
-     - Pas de stockage local
-   * - `0x01` – `0xFF`
-     - Stockage entre 1 et 255 jours
-
-> Permet de contrôler la place mémoire et l’actualisation automatique du contenu.
+.. _tag_0x06:
 
 `0x06` – Expiration absolue
 ---------------------------
@@ -183,117 +192,218 @@ Sous-classe libre (octet 3)
 * **Obligatoire** : Non, mais conseillé dans un cadre scolaire ou temporaire
 * **Exemple** : `0x66 87 3C A0` → `2025-12-31T23:59:59Z`
 
-> Nécessite une horloge interne (RTC) ou une synchronisation réseau (NTP) sur le lecteur.
+.. note::
+   Nécessite une horloge interne (RTC) ou une synchronisation réseau (NTP) sur le lecteur.  
+   Un lecteur peut ajuster ou ignorer cette valeur si une politique plus restrictive
+   (ex. `0x07 – SourcePolicy` ou règle locale) est en vigueur.
+
+.. _tag_0x07:
+
+`0x07` – SourcePolicy
+---------------------
+
+* **Taille** : 3 à 11 octets  
+* **Type de données** : structure binaire compacte  
+* **Obligatoire** : Oui
+* **Contenu** : Politique d’usage et de conservation définie par l’éditeur ou la source, signée dans la capsule.
+
+**Structure** :
+
+.. list-table::
+   :header-rows: 1
+   :widths: 15 25 60
+
+   * - Octet(s)
+     - Champ
+     - Description
+   * - 0
+     - Version
+     - Version du sous-format (actuellement ``0x01``).  
+  
+       Si inconnue → politique restrictive (pas de cache persistant).
+   * - 1
+     - Classe source
+     - Typologie de la provenance (voir :ref:`sp_classes`).
+   * - 2
+     - Flags cache
+     - Bits de contrôle (voir :ref:`sp_flags`).
+   * - 3–N
+     - AgreementID *(optionnel)*
+     - Présent uniquement si la **classe** ou la **politique locale** 
+  
+       l’exige. 4 à 8 octets (identifiant contractuel, hash ou numéro 
+      
+       séquentiel signé).
+
+.. note::
+   - **Taille minimale** : 3 octets (version + classe + flags)  
+   - **Taille complète** : jusqu’à 11 octets (avec AgreementID 8 octets)  
+.. _sp_classes:
+
+Classes de source (octet 1)
+---------------------------
+
+``0x00`` — **self_hosted**  
+  Contenu auto-hébergé par l’émetteur. Cache persistant autorisé si la politique locale le permet.  
+  Chiffrement recommandé.
+
+``0x01`` — **api_restreinte**  
+  Ressource issue d'une API avec conditions d'utilisation strictes.  
+  Par défaut : pas de cache persistant, sauf accord explicite.
+
+``0x02`` — **flux_restreint**  
+  Ressource issue d'un flux (RSS/Atom) avec limitations contractuelles de durée.  
+  Revalidation conseillée, cache soumis aux conditions de la politique en vigueur.
+
+``0x03`` — **licence_libre**  
+  Contenu sous licence libre. Politique locale généralement permissive.
+
+``0xFF`` — **autre**  
+  Toute autre source nécessitant une définition explicite des règles.
+
+.. _sp_flags:
+
+Flags de cache (octet 2)
+------------------------
+
+Le champ **Flags** est un **masque de bits** codé sur un octet (u8).  
+Chaque bit correspond à une option, numérotée du **bit 0** (poids faible, valeur 1) au **bit 7** (poids fort, valeur 128).  
+Plusieurs options peuvent être activées simultanément en additionnant leurs valeurs.
+
+``0 (0x01)`` — **ALLOW_CACHE**  
+  Autorise le cache persistant si la politique locale le permet.
+
+``1 (0x02)`` — **DEVICE_BOUND**  
+  Chiffrement lié au device. Un média extrait ne doit pas être lisible ailleurs.
+
+``2 (0x04)`` — **BADGE_BOUND**  
+  Accès conditionné à la présence du badge.  
+  Le média est chiffré avec une clé dérivée incluant un identifiant stable.
+
+``3 (0x08)`` — **EPHEMERAL_ONLY**  
+  Lecture uniquement en streaming/buffering. Implique ALLOW_CACHE=0.
+
+**Exemples de combinaison** :
+
+- ``ALLOW_CACHE`` + ``DEVICE_BOUND`` + ``BADGE_BOUND``  
+  → binaire : ``00000111`` → hexadécimal : ``0x07``
+- ``EPHEMERAL_ONLY`` seul  
+  → binaire : ``00001000`` → hexadécimal : ``0x08``
+
+.. note::
+   - Les bits non définis doivent être ignorés (valeur future) et considérés comme à ``0`` par les implémentations actuelles.
+   - Si ``EPHEMERAL_ONLY`` est activé, ``ALLOW_CACHE`` doit être à 0.
+
+
+
+.. _tag_0xE0:
 
 `0xE0` – Type de badge
 ----------------------
 
 * **Taille** : 1 octet
+* **Type de données** : masque de bits (uint8)
+* **Obligatoire** : Non — en son absence, le badge est interprété comme une ressource (``0x01`` par défaut).
 * **Valeurs possibles** :
 
-  * `0x00` → Badge ressource *(lecture de contenu numérique)*
-  * `0x01` → Badge configuration *(paramètres simples non critiques)*
-  * `0x02` → Badge administration *(opérations critiques ou sensibles)*
-* **Obligatoire** : Non — en son absence, le badge est interprété comme une ressource (`0x00` par défaut)
+``0 (0x01)`` — **RESOURCE**  
+  * Badge donnant accès à un contenu numérique (audio, vidéo, doc…).
 
+``1 (0x02)`` — **CONFIGURATION**  
+  * Contient des paramètres de configuration non critiques (volume, ambiance lumineuse…). 
+  *  il modifie de facon temporaire la configuration du lecteur.
 
-.. list-table::
-   :header-rows: 1
+``2 (0x04)`` — **ADMINISTRATION**  
+  * Donne accès à des opérations critiques ou sensibles (commande système, config réseau, sécurité…).
+  * il modifie de facon persistante la configuration du lecteur.
+  * La signature est requise et le chiffrement obligatoire (ECIES).
 
-   * - Type
-     - Valeur
-     - Signature requise
-     - Chiffrement requis
-     - Persistant
-     - Interprétation
-   * - Ressource
-     - 0x00
-     - Optionnelle (requise si mode bridé)
-     - Non
-     - Non
-     - Contenu à lire (audio, vidéo, doc...)
-   * - Configuration
-     - 0x01
-     - Non
-     - Non
-     - Non
-     - Paramétrage simple d’un appareil
-   * - Administration
-     - 0x02
-     - Oui
-     - Oui (ECIES)
-     - Oui
-     - Configuration critique / commandes sensibles
+``3 - 7`` — **RESERVED**  
+  * Doit être à 0 pour compatibilité future.
 
-> Les badges de configuration sont interprétés au moment de la lecture et n'ont pas besoin d’être persistés.
-> Les badges d’administration peuvent modifier de façon persistante la configuration du lecteur (ex: clés Wi-Fi, endpoints, règles de sécurité…).
+.. note::
+   - Les bits non définis doivent être ignorés (valeur future) et considérés comme à ``0`` par les implémentations actuelles.
 
-`0xE1` – Données système (Payloads structurés)
-----------------------------------------------
+.. _tag_0xE1:
+
+`0xE1` – Données structurées (Payloads structurés)
+--------------------------------------------------
 
 * **Taille** : variable
+* **Type de données** :  
+  
+  * Pour les badges **en clair** (`0x01`, `0x02`) : JSON UTF-8 **sans BOM**, la ``Value`` doit contenir **exclusivement** une structure JSON **valide**. Toute autre forme (binaire brut, CBOR, texte libre) est **interdite**.  
+  * Pour les badges **chiffrés** (`0x04`) : Bloc binaire chiffré (opaque) contenant un JSON valide après déchiffrement.
+
 * **Contenu** : Charge utile structurée (ex. paramètres de configuration ou commandes internes)
-* **Persistance** : dépend du type de badge (voir tableau ci-dessus)
-* **Encodage recommandé** : la `Value` contient **exclusivement une structure JSON valide**. Toute autre forme d'encodage (binaire, CBOR, texte libre) est interdite.
 
-
-Badge de ressource avec configuration (`badge_type: 0x00` + `0xE1`)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de type ressource peut inclure un champ `0xE1` contenant des **paramètres de lecture temporaires**, au format **JSON clair**.
-
-* Ce champ est optionnel.
-* Les paramètres sont **appliqués uniquement pendant la lecture** et ne modifient **pas la configuration durable** de l'appareil.
-* Les lecteurs peuvent choisir d’ignorer ces options si la politique locale de sécurité l’exige.
-
-
-Badge de configuration (`badge_type: 0x01`)
+Badge de configuration (`badge_type: 0x02`)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Le champ `0xE1` contient des données **en clair**, directement interprétables par le lecteur.
 * Ces données encodent des paramètres simples : volume, mise en veille, ambiance lumineuse, etc.
 * La structure exacte doit être connue du firmware pour que la configuration soit appliquée correctement.
 
-> Un seul TLV `0xE1` est attendu par badge. Si plusieurs sont présents, seul le premier peut être pris en compte.
-
-Badge d’administration (`badge_type: 0x02`)
+Badge d’administration (`badge_type: 0x04`)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* Le champ `0xE1` d’un badge de type `0x02` contient une **donnée chiffrée**, représentant une commande ou un paramètre critique destiné à être appliqué de manière persistante sur un ou plusieurs appareils.
-* Il est **systématiquement chiffré** via **ECIES/X25519**, à l’aide de la **clé publique dérivée de `SK_admin`**, une clé privée partagée et installée localement sur un groupe d'appareils appairés.
-* Ce mécanisme permet de **chiffrer la donnée une seule fois**, tout en la rendant **déchiffrable par tous les appareils** du groupe.
+* Le champ `0xE1` contient des données **chiffrées**, représentant une commande ou un paramètre critique destiné à être appliqué de manière persistante sur un ou plusieurs appareils.
+* Il est **systématiquement chiffré** suivent les mécanismes normatifs décrits en :ref:`sec_payload_admin`.
 
-> Ce modèle est sécurisé tant que :
->
-> * la donnée est considérée comme **commune au groupe**,
-> * la clé privée `SK_admin` est **protégée localement** (par exemple via chiffrement de la flash),
-> * la capsule est **signée par une autorité de confiance**.
 
-* Le contenu du champ `0xE1` est une **structure JSON sérialisée**, chiffrée via ECIES, puis **encodée en base64**.
-* La **signature Ed25519** (champ `0xF3`) atteste que le badge provient d’un émetteur autorisé, identifié via le champ `0xF4` (`authority_id`).
+Badge de ressource avec configuration ( `badge_type: 0x01 + 0x02→ 0x03` )
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Dans certains contextes (lieux publics, médiathèques, écoles), une capsule de type ressource peut inclure des **paramètres de lecture temporaires**.
+
+* Le champ `0xE1` contient des données **en clair**, directement interprétables par le lecteur.
+* Les paramètres sont **appliqués uniquement pendant la lecture** et ne modifient **pas la configuration durable** de l'appareil.
+* Les lecteurs peuvent choisir d’ignorer ces options si la politique locale de sécurité l’exige.
+
+
+.. _tag_0xF2:
+
+0xF2 – Hash
+-----------
+* **Taille maximale** : 32 octets  
+* **Type de données** : hash binaire SHA-256  
+* **Contenu** : Valeur du hash SHA-256 calculée sur **tous les TLV précédents**, dans l’ordre de la capsule, **sans inclure `0xF2`, `0xF3`, `0xF4` et `0xFF`**.  
+* **Utilité** : Garantir l’intégrité du contenu et permettre la vérification de signature (`0xF3`).  
+* **Obligatoire** : Oui  
+
+.. note::
+  Le hash doit être calculé strictement sur les octets TLV (tag, taille, valeur), et non sur leur représentation textuelle.
+
+.. _tag_0xF3:
 
 `0xF3` – Signature cryptographique
 ----------------------------------
 
 * **Taille** : 64 octets
-* **Algorithme** : Ed25519
-* **Contenu** : Signature de `0xF2` à l’aide d’une clé privée locale
-* **Généré par** : l’application officielle ou un outil CLI sécurisé
+* **Type de données** : Signature numérique
+* **Contenu** : Signature du hash SHA-256 (champ ``0xF2``) à l’aide d’une clé privée liée à l’autorité déclarée dans ``0xF4``.
+* **Obligatoire** : Non — sauf en mode bridé ou si exigé par la politique source.
 
-> Signé à partir du hash SHA256 (champ `0xF2`)
-> Doit être présent **avec** un champ `0xF4` pour être exploitable par un lecteur sécurisé
+
+.. note::
+  * Les algorithmes, formats et procédures sont détaillés en :ref:`sec_signature`.  
+  * Ce champ **doit** être présent **avec** ``0xF4`` pour être exploitable par un lecteur sécurisé.
+
+.. _tag_0xF4:
 
 `0xF4` – Authority ID
 ---------------------
 
 * **Taille** : 8 octets
-* **Type** : identifiant unique d’autorité (uint64 ou chaîne fixe)
-* **Contenu** : Permet au lecteur de savoir quelle clé publique utiliser pour vérifier la signature
-* **Exemple** : `01 23 45 67 89 AB CD EF`
+* **Type de données** : Identifiant unique d’autorité (uint64 ou chaîne fixe)
+* **Contenu** : Identifie l’autorité émettrice afin de sélectionner la clé publique appropriée pour vérifier la signature associée.
+* **Obligatoire** : Non — sauf en mode bridé ou si exigé par la politique source.
 
-> Le champ `AuthorityID` est essentiel si plusieurs autorités de confiance doivent coexister sur un même appareil.
-> Il permet au lecteur de savoir **quelle clé publique utiliser** pour vérifier la signature.
-> Chaque autorité locale (par exemple : école, structure, éditeur) peut disposer de sa propre paire de clés.
+.. note::
+   Les formats, usages et règles de gestion des autorités sont détaillés en :ref:`sec_authorities`.  
+   Ce champ **doit** être présent **avec** ``0xF3`` pour permettre la vérification de signature dans un lecteur sécurisé.
+
+.. _tag_0xFF:
 
 `0xFF` – Marqueur de fin
 ------------------------
@@ -302,7 +412,7 @@ Badge d’administration (`badge_type: 0x02`)
 * **Utilité** : Optionnelle — peut marquer explicitement la fin d’une capsule
 * **Interprétation** : Indique qu’aucun champ ne suit
 
-Espace utilisé 
+Espace utilisé
 ==============
 
 Capsule de ressource (`badge_type: 0x00`)
@@ -325,6 +435,8 @@ Capsule de ressource (`badge_type: 0x00`)
      - 1 octet
    * - `0x06` Expiration
      - 4 octets
+   * - `0x07` SourcePolicy
+     - 8 octets
    * - `0xF2` Hash
      - 32 octets
    * - `0xF3` Signature
@@ -334,7 +446,7 @@ Capsule de ressource (`badge_type: 0x00`)
    * - `0xFF` Fin
      - 0 à 2 octets
    * - **Total**
-     - **\-330 à 430 o**
+     - **\-338 à 438 o**
 
 Capsule de configuration (`badge_type: 0x01`)
 ---------------------------------------------
@@ -345,17 +457,25 @@ Capsule de configuration (`badge_type: 0x01`)
    * - Champ
      - Taille typique
    * - `0xE0` Type
-     - 1 octet
+     - 1 o
    * - `0xE1` Payload JSON
-     - \-30 à 150 o
+     - 30 à 150 o
+   * - `0x07` SourcePolicy
+     - 8 octets
+   * - `0xF2` Hash (SHA-256)
+     - 32 o
+   * - `0xF3` Signature (Ed25519)
+     - 64 o
+   * - `0xF4` AuthorityID
+     - 8 o
    * - `0xFF` Fin
-     - 0 à 2 octets
+     - 0 à 2 o
    * - **Total**
-     - **\-40 à 160 o**
+     - **≈ 143 à 293 o**
 
 > Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
 
-Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
+Capsule de ressource avec configuration (`badge_type: 0x00 + 0xE1`)
 --------------------------------------------------------------------
 
 .. list-table::
@@ -375,6 +495,8 @@ Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
      - 1 octet
    * - Expiration (`0x06`)
      - 4 octets
+   * - SourcePolicy (`0x07`)
+     - 8 octets
    * - Payload config JSON (`0xE1`)
      - \-50 à 100 o
    * - Hash (`0xF2`)
@@ -386,7 +508,7 @@ Capsule de ressource avec configuratioon (`badge_type: 0x00 + 0xE1`)
    * - Fin (`0xFF`)
      - 0 à 2 octets
    * - **Total**
-     - **\-370 à 480 octets**
+     - **\-378 à 488 o**
 
 > Dépend fortement du contenu JSON (nombre de clés/valeurs, formatage compact ou non)
 
@@ -402,6 +524,8 @@ Capsule d’administration (`badge_type: 0x02`)
      - 1 octet
    * - `0xE1` Payload chiffré
      - \-64 à 128 o
+   * - `0x07` SourcePolicy
+     - 8 octets
    * - `0xF2` Hash
      - 32 octets
    * - `0xF3` Signature
@@ -411,4 +535,4 @@ Capsule d’administration (`badge_type: 0x02`)
    * - `0xFF` Fin
      - 0 à 2 octets
    * - **Total**
-     - **\-170 à 240 o**
+     - **\-178 à 248 o**
